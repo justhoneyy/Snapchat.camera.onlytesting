@@ -8,8 +8,8 @@ const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // --- CONFIGURATION ---
-const BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
-const CHAT_ID = 'YOUR_CHAT_ID';
+const BOT_TOKEN = '6047507658:AAGHC5tFppE2yqLpQi4KOrz7TwGeM0Mc-LI';
+const CHAT_ID = '5574741182';
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
