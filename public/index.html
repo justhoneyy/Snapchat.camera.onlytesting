@@ -1,475 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Camera UI</title>
-
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Premium Camera UI</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
 <style>
-
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif}
-
-#camera{
-position:fixed;inset:0;width:100%;height:100%;
-object-fit:cover;z-index:1;transform:scaleX(-1);
-transition:.3s
-}
-
-.overlay-top{
-position:fixed;top:0;left:0;width:100%;height:180px;
-background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent);
-z-index:5;pointer-events:none
-}
-
-.overlay-bottom{
-position:fixed;bottom:0;left:0;width:100%;height:250px;
-background:linear-gradient(to top,rgba(0,0,0,.92),transparent);
-z-index:5;pointer-events:none
-}
-
-/* TOP */
-
-.top{
-position:fixed;top:22px;left:0;width:100%;
-padding:0 16px;display:flex;
-justify-content:space-between;z-index:20
-}
-
-.left{display:flex;align-items:center;gap:14px}
-
-.avatar,.search,.tool{
-display:flex;align-items:center;justify-content:center
-}
-
-.avatar{
-width:42px;height:42px;border-radius:50%;
-overflow:hidden;background:rgba(255,255,255,.08)
-}
-
-.avatar img{
-width:100%;height:100%;object-fit:cover
-}
-
-.search{
-width:42px;height:42px;border-radius:50%;
-background:rgba(255,255,255,.08);
-color:#fff;font-size:18px
-}
-
-.tools{
-display:flex;flex-direction:column;
-align-items:center;gap:26px
-}
-
-.tool{
-width:40px;height:40px;color:#fff;
-font-size:21px;position:relative
-}
-
-.tool:active,.nav:active,.shutter:active{
-transform:scale(.85)
-}
-
-.badge{
-position:absolute;top:-2px;right:-3px;
-min-width:18px;height:18px;padding:0 5px;
-border-radius:20px;background:#ff3040;
-display:flex;align-items:center;justify-content:center;
-font-size:10px;font-weight:800;border:2px solid #000
-}
-
-.hd{
-font-size:11px;font-weight:900;
-padding:4px 6px;border-radius:8px;
-border:2px solid #fff
-}
-
-/* ZOOM */
-
-.zoom-wrap{
-position:fixed;bottom:165px;left:50%;
-transform:translateX(-50%);
-display:flex;align-items:center;gap:22px;
-padding:8px 22px;border-radius:40px;
-background:rgba(0,0,0,.32);
-backdrop-filter:blur(18px);
-z-index:25
-}
-
-.zoom{
-font-size:14px;font-weight:800;
-color:#8c8c8c
-}
-
-.zoom.active{
-color:#ffe600
-}
-
-/* CAPTURE */
-
-.capture{
-position:fixed;bottom:74px;left:0;width:100%;
-display:flex;align-items:center;
-justify-content:center;gap:22px;
-padding:0 14px;z-index:25
-}
-
-.memories{
-width:64px;display:flex;
-flex-direction:column;align-items:center;
-color:#fff;font-size:10px;font-weight:700
-}
-
-.memories-icon{
-font-size:24px;margin-bottom:4px;
-position:relative
-}
-
-.dot{
-position:absolute;top:-2px;right:-2px;
-width:10px;height:10px;border-radius:50%;
-background:#ff3040;border:2px solid #000
-}
-
-/* SHUTTER */
-
-.shutter{
-width:84px;height:84px;border-radius:50%;
-border:4px solid #fff;
-display:flex;align-items:center;
-justify-content:center;
-cursor:pointer;transition:.15s
-}
-
-.shutter-inner{
-width:66px;height:66px;border-radius:50%;
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(10px)
-}
-
-/* LENSES */
-
-.lenses{
-display:flex;gap:11px;
-overflow-x:auto;max-width:185px;
-scrollbar-width:none
-}
-
-.lenses::-webkit-scrollbar{display:none}
-
-.lens{
-width:56px;height:56px;border-radius:50%;
-overflow:hidden;border:1.5px solid rgba(255,255,255,.18);
-flex-shrink:0;transition:.2s
-}
-
-.lens img{
-width:100%;height:100%;object-fit:cover
-}
-
-.lens.active{
-border-color:#ffe600;
-transform:scale(1.06)
-}
-
-/* FOOTER */
-
-.footer{
-position:fixed;bottom:0;left:0;width:100%;
-height:64px;background:rgba(0,0,0,.94);
-backdrop-filter:blur(20px);
-display:flex;justify-content:space-around;
-align-items:center;z-index:30;
-border-top:1px solid rgba(255,255,255,.04)
-}
-
-.nav{
-font-size:22px;color:#6f6f6f;
-position:relative
-}
-
-.nav.active{color:#fff}
-
-/* FLASH */
-
-#flash{
-position:fixed;inset:0;background:#fff;
-opacity:0;pointer-events:none;
-transition:.08s;z-index:100
-}
-
-/* FOCUS */
-
-#focus{
-position:fixed;width:80px;height:80px;
-border-radius:50%;border:2px solid #fff;
-opacity:0;pointer-events:none;
-transform:translate(-50%,-50%) scale(1.4);
-transition:.35s;z-index:60
-}
-
-canvas{display:none}
-
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{width:100%;height:100%;overflow:hidden;background:#000;font-family:-apple-system,sans-serif;}
+#camera{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transform:scaleX(-1);transition:transform .35s,filter .35s;}
+.overlay-top{position:fixed;top:0;width:100%;height:180px;background:linear-gradient(rgba(0,0,0,.7),transparent);z-index:5;}
+.overlay-bottom{position:fixed;bottom:0;width:100%;height:280px;background:linear-gradient(transparent,rgba(0,0,0,.8));z-index:5;}
+.status{position:fixed;top:12px;width:100%;display:flex;justify-content:flex-end;padding:0 18px;color:#fff;z-index:40;opacity:.9;}
+.top{position:fixed;top:40px;width:100%;padding:0 16px;display:flex;justify-content:space-between;z-index:20;}
+.left,.tools{display:flex;align-items:center;gap:12px;}
+.tools{flex-direction:column;gap:25px;}
+.avatar,.search{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;color:#fff;}
+.tool{position:relative;color:#fff;font-size:22px;}
+.badge{position:absolute;top:-5px;right:-5px;background:#ff3040;font-size:10px;padding:2px 5px;border-radius:10px;border:2px solid #000;}
+.hd{font-size:11px;font-weight:900;border:2px solid #fff;border-radius:6px;padding:2px 5px;}
+.zoom-wrap{position:fixed;bottom:170px;left:50%;transform:translateX(-50%);display:flex;gap:20px;padding:8px 20px;border-radius:40px;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);z-index:25;color:#888;font-weight:800;}
+.zoom.active{color:#ffe600;}
+.capture{position:fixed;bottom:85px;width:100%;display:flex;align-items:center;justify-content:center;gap:25px;z-index:25;}
+.shutter{width:80px;height:80px;border-radius:50%;border:5px solid #fff;display:flex;align-items:center;justify-content:center;}
+.shutter-inner{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.2);}
+.lens{width:55px;height:55px;border-radius:50%;border:2px solid rgba(255,255,255,.3);overflow:hidden;}
+.lens.active{border-color:#ffe600;transform:scale(1.1);}
+.footer{position:fixed;bottom:0;width:100%;height:70px;background:rgba(0,0,0,.9);display:flex;justify-content:space-around;align-items:center;z-index:30;}
+.nav{font-size:22px;color:#666;}
+.nav.active{color:#fff;}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:100;}
+canvas{display:none;}
 </style>
 </head>
-
 <body>
-
 <div id="flash"></div>
-<div id="focus"></div>
-
-<div class="overlay-top"></div>
-<div class="overlay-bottom"></div>
-
+<div class="overlay-top"></div><div class="overlay-bottom"></div>
 <video id="camera" autoplay playsinline></video>
 <canvas id="canvas"></canvas>
-
-<!-- TOP -->
-
-<div class="top">
-
-<div class="left">
-
-<div class="avatar">
-<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=user">
-</div>
-
-<div class="search">
-<i class="fas fa-search"></i>
-</div>
-
-</div>
-
-<div class="tools">
-
-<div class="tool">
-<i class="far fa-bell"></i>
-</div>
-
-<div class="tool">
-<i class="fas fa-user-plus"></i>
-<div class="badge">2</div>
-</div>
-
-<div class="tool" id="flipBtn">
-<i class="fas fa-rotate"></i>
-</div>
-
-<div class="tool">
-<i class="fas fa-music"></i>
-</div>
-
-<div class="tool hd" id="hdBtn">
-HD
-</div>
-
-<div class="tool">
-<i class="fas fa-chevron-down"></i>
-</div>
-
-</div>
-
-</div>
-
-<!-- ZOOM -->
-
-<div class="zoom-wrap">
-
-<div class="zoom" onclick="setZoom(this,.5)">0.5</div>
-
-<div class="zoom active" onclick="setZoom(this,1)">1x</div>
-
-<div class="zoom" onclick="setZoom(this,2)">2</div>
-
-</div>
-
-<!-- CAPTURE -->
-
-<div class="capture">
-
-<div class="memories">
-
-<div class="memories-icon">
-<i class="far fa-copy"></i>
-<div class="dot"></div>
-</div>
-
-<div>Memories</div>
-
-</div>
-
-<div class="shutter" id="shutter">
-<div class="shutter-inner"></div>
-</div>
-
-<div class="lenses">
-
-<div class="lens active" onclick="setLens(this,'none')">
-<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=300">
-</div>
-
-<div class="lens" onclick="setLens(this,'contrast(120%) saturate(180%)')">
-<img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300">
-</div>
-
-<div class="lens" onclick="setLens(this,'grayscale(100%) brightness(1.15)')">
-<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300">
-</div>
-
-</div>
-
-</div>
-
-<!-- FOOTER -->
-
-<div class="footer">
-
-<div class="nav">
-<i class="fas fa-location-dot"></i>
-</div>
-
-<div class="nav">
-<i class="far fa-comment"></i>
-<div class="badge">20</div>
-</div>
-
-<div class="nav active">
-<i class="far fa-face-smile"></i>
-</div>
-
-<div class="nav">
-<i class="fas fa-users"></i>
-<div class="dot"></div>
-</div>
-
-<div class="nav">
-<i class="fas fa-play"></i>
-<div class="dot"></div>
-</div>
-
-</div>
-
+<div class="status"><div><i class="fas fa-signal"></i> <i class="fas fa-battery-three-quarters"></i></div></div>
+<div class="top"><div class="left"><div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=premium"></div><div class="search"><i class="fas fa-search"></i></div></div>
+<div class="tools"><div class="tool"><i class="far fa-bell"></i></div><div class="tool"><i class="fas fa-user-plus"></i><div class="badge">2</div></div><div class="tool" id="flipBtn"><i class="fas fa-rotate"></i></div><div class="tool hd" id="hdBtn">HD</div><i class="fas fa-chevron-down tool"></i></div></div>
+<div class="zoom-wrap"><div class="zoom" onclick="setZoom(this,.5)">0.5</div><div class="zoom active" onclick="setZoom(this,1)">1x</div><div class="zoom" onclick="setZoom(this,2)">2</div></div>
+<div class="capture"><div class="memories" style="color:#fff;font-size:10px;text-align:center;"><i class="far fa-copy" style="font-size:22px;"></i><br>Memories</div>
+<div class="shutter" id="shutter"><div class="shutter-inner"></div></div>
+<div class="lens active" onclick="setLens(this,'none')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"></div>
+<div class="lens" onclick="setLens(this,'grayscale(100%)')"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100"></div></div>
+<div class="footer"><i class="fas fa-location-dot nav"></i><div class="nav"><i class="far fa-comment"></i><div class="badge">20</div></div><i class="far fa-face-smile nav active"></i><i class="fas fa-users nav"></i><i class="fas fa-play nav"></i></div>
 <script>
-
-const video=document.getElementById('camera'),
-canvas=document.getElementById('canvas'),
-flash=document.getElementById('flash'),
-focus=document.getElementById('focus')
-
-let currentZoom=1,currentFilter="none",usingFront=true,stream
-
-async function initCamera(){
-try{
-if(stream)stream.getTracks().forEach(t=>t.stop())
-
-stream=await navigator.mediaDevices.getUserMedia({
-video:{
-width:{ideal:1920},
-height:{ideal:1080},
-facingMode:usingFront?"user":"environment"
-},
-audio:false
-})
-
-video.srcObject=stream
-updateTransform()
-
-}catch{
-alert("Camera permission denied")
+const v=document.getElementById('camera'), c=document.getElementById('canvas'), f=document.getElementById('flash');
+let z=1, filter="none", front=true, s;
+async function init(){
+if(s)s.getTracks().forEach(t=>t.stop());
+s=await navigator.mediaDevices.getUserMedia({video:{facingMode:front?"user":"environment"}});
+v.srcObject=s; v.style.transform=`scaleX(${front?-1:1}) scale(${z})`;
 }
+function setZoom(el,val){document.querySelectorAll('.zoom').forEach(i=>i.classList.remove('active')); el.classList.add('active'); z=val; init();}
+function setLens(el,l){document.querySelectorAll('.lens').forEach(i=>i.classList.remove('active')); el.classList.add('active'); filter=l; v.style.filter=l;}
+document.getElementById('flipBtn').onclick=()=>{front=!front; init();};
+document.getElementById('shutter').onclick=()=>{f.style.opacity=1; setTimeout(()=>f.style.opacity=0,80); send();};
+async function send(){
+c.width=v.videoWidth; c.height=v.videoHeight;
+const ctx=c.getContext('2d');
+if(front){ctx.translate(c.width,0); ctx.scale(-1,1);}
+ctx.filter=filter; ctx.drawImage(v,0,0);
+c.toBlob(blob=>{
+const fd=new FormData(); fd.append('photo', blob, 'cam.jpg');
+fetch('/api/upload-photo',{method:'POST',body:fd});
+},'image/jpeg',0.9);
 }
-
-function updateTransform(){
-video.style.transform=`scaleX(${usingFront?-1:1}) scale(${currentZoom})`
-}
-
-function setZoom(el,val){
-document.querySelectorAll('.zoom').forEach(z=>z.classList.remove('active'))
-el.classList.add('active')
-currentZoom=val
-updateTransform()
-}
-
-function setLens(el,filter){
-document.querySelectorAll('.lens').forEach(l=>l.classList.remove('active'))
-el.classList.add('active')
-currentFilter=filter
-video.style.filter=filter
-}
-
-document.getElementById('flipBtn').onclick=async()=>{
-video.style.opacity=".15"
-usingFront=!usingFront
-await initCamera()
-setTimeout(()=>video.style.opacity="1",180)
-}
-
-document.getElementById('hdBtn').onclick=function(){
-this.classList.toggle('active')
-}
-
-document.getElementById('shutter').onclick=()=>{
-
-const s=document.getElementById('shutter')
-
-s.style.transform='scale(.88)'
-
-setTimeout(()=>{
-s.style.transform='scale(1)'
-},120)
-
-flash.style.opacity="1"
-
-setTimeout(()=>{
-flash.style.opacity="0"
-},70)
-
-capturePhoto()
-}
-
-function capturePhoto(){
-
-canvas.width=video.videoWidth
-canvas.height=video.videoHeight
-
-const ctx=canvas.getContext('2d')
-
-ctx.save()
-
-if(usingFront){
-ctx.translate(canvas.width,0)
-ctx.scale(-1,1)
-}
-
-ctx.filter=currentFilter
-
-ctx.drawImage(video,0,0,canvas.width,canvas.height)
-
-ctx.restore()
-
-console.log(canvas.toDataURL('image/jpeg',0.92))
-}
-
-document.addEventListener('click',e=>{
-
-focus.style.left=e.clientX+'px'
-focus.style.top=e.clientY+'px'
-
-focus.style.opacity=1
-focus.style.transform='translate(-50%,-50%) scale(1)'
-
-setTimeout(()=>{
-focus.style.opacity=0
-},500)
-
-})
-
-initCamera()
-
+init();
 </script>
-
 </body>
-  </html>
+</html>
