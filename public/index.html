@@ -2,17 +2,14 @@
 <html lang="en">
 <head>
 
-<meta charset="UTF-8" />
-
+<meta charset="UTF-8">
 <meta name="viewport"
 content="width=device-width,
 initial-scale=1.0,
 maximum-scale=1.0,
-user-scalable=no"/>
+user-scalable=no">
 
-<title>Camera UI Demo</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
+<title>Premium Camera UI</title>
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -31,233 +28,264 @@ width:100%;
 height:100%;
 overflow:hidden;
 background:#000;
-font-family:-apple-system,system-ui,sans-serif;
-user-select:none;
+font-family:-apple-system,BlinkMacSystemFont,
+"SF Pro Display",sans-serif;
 }
 
-/* CAMERA */
+/* VIDEO */
 
-#cameraVideo{
+#camera{
 position:fixed;
-top:0;
-left:0;
+inset:0;
 width:100%;
 height:100%;
 object-fit:cover;
 z-index:1;
-transition:
-transform .25s ease,
-filter .25s ease,
-opacity .25s ease;
 transform:scaleX(-1);
+transition:
+transform .35s ease,
+filter .35s ease,
+opacity .25s ease;
 }
 
-/* VIGNETTE */
+/* CINEMATIC OVERLAY */
 
-.vignette-top{
+.overlay-top{
 position:fixed;
 top:0;
 left:0;
 width:100%;
-height:180px;
-background:linear-gradient(
+height:220px;
+background:
+linear-gradient(
 to bottom,
-rgba(0,0,0,.78),
+rgba(0,0,0,.88),
+rgba(0,0,0,.4),
 transparent
 );
 z-index:5;
 pointer-events:none;
 }
 
-.vignette-bottom{
+.overlay-bottom{
 position:fixed;
 bottom:0;
 left:0;
 width:100%;
-height:240px;
-background:linear-gradient(
+height:320px;
+background:
+linear-gradient(
 to top,
-rgba(0,0,0,.95),
+rgba(0,0,0,.98),
+rgba(0,0,0,.65),
 transparent
 );
 z-index:5;
 pointer-events:none;
 }
 
-/* TOP BAR */
+/* STATUS BAR */
 
-.top-bar{
+.status{
 position:fixed;
-top:28px;
+top:12px;
 left:0;
 width:100%;
 display:flex;
 justify-content:space-between;
-padding:0 14px;
-z-index:20;
+padding:0 18px;
+color:#fff;
+font-size:15px;
+font-weight:600;
+z-index:40;
+opacity:.92;
+}
+
+/* TOP */
+
+.top{
+position:fixed;
+top:48px;
+left:0;
+width:100%;
+padding:0 16px;
+display:flex;
+justify-content:space-between;
 align-items:flex-start;
+z-index:20;
 }
 
 /* LEFT */
 
-.left-icons{
+.left{
 display:flex;
 align-items:center;
 gap:12px;
-margin-top:2px;
 }
 
-.profile{
-width:40px;
-height:40px;
+.avatar{
+width:42px;
+height:42px;
 border-radius:50%;
 overflow:hidden;
-background:rgba(255,255,255,.12);
-backdrop-filter:blur(20px);
+background:
+rgba(255,255,255,.14);
+backdrop-filter:blur(18px);
 border:1px solid rgba(255,255,255,.08);
+box-shadow:
+0 8px 30px rgba(0,0,0,.35),
+inset 0 1px 1px rgba(255,255,255,.08);
 }
 
-.profile img{
+.avatar img{
 width:100%;
 height:100%;
 object-fit:cover;
 }
 
-.search-btn{
-width:40px;
-height:40px;
+.search{
+width:42px;
+height:42px;
 border-radius:50%;
-background:rgba(255,255,255,.12);
-backdrop-filter:blur(20px);
+background:
+rgba(255,255,255,.14);
+backdrop-filter:blur(18px);
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:18px;
 color:#fff;
+font-size:18px;
 box-shadow:
-0 4px 20px rgba(0,0,0,.35),
-inset 0 1px 1px rgba(255,255,255,.1);
+0 8px 30px rgba(0,0,0,.35),
+inset 0 1px 1px rgba(255,255,255,.08);
 }
 
 /* RIGHT TOOLS */
 
-.side-tools{
+.tools{
 display:flex;
 flex-direction:column;
+gap:28px;
 align-items:center;
-gap:34px;
-padding-right:2px;
-margin-top:6px;
+padding-top:2px;
 }
 
 .tool{
-font-size:20px;
+width:42px;
+height:42px;
+display:flex;
+align-items:center;
+justify-content:center;
 color:#fff;
-cursor:pointer;
-transition:.15s;
+font-size:22px;
+border-radius:50%;
+background:
+rgba(255,255,255,.05);
+backdrop-filter:blur(10px);
 position:relative;
-filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));
+transition:.2s;
 }
 
 .tool:active{
-transform:scale(.88);
+transform:scale(.84);
 }
 
-.active-tool{
-color:#FFFC00;
+.tool.active{
+color:#ffe600;
+}
+
+.tool i{
+filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));
 }
 
 .badge{
 position:absolute;
-top:-8px;
-right:-10px;
-background:#ff3040;
-color:#fff;
-font-size:10px;
-font-weight:800;
-padding:1px 6px;
-border-radius:20px;
-border:1px solid #000;
-}
-
-.red-dot{
-position:absolute;
 top:-2px;
-right:-2px;
-width:10px;
-height:10px;
+right:-1px;
+min-width:20px;
+height:20px;
+padding:0 5px;
+border-radius:20px;
 background:#ff3040;
-border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+font-weight:800;
 border:2px solid #000;
 }
 
-.hd-box{
-border:2px solid #fff;
-padding:2px 6px;
-border-radius:6px;
-font-size:11px;
+.hd{
+font-size:12px;
 font-weight:900;
+border:2px solid #fff;
+border-radius:8px;
+padding:4px 6px;
+width:auto;
+height:auto;
+background:transparent;
 }
 
 /* ZOOM */
 
-.zoom-bar{
+.zoom-wrap{
 position:fixed;
-bottom:165px;
+bottom:168px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
 align-items:center;
-gap:24px;
-background:rgba(0,0,0,.38);
-backdrop-filter:blur(20px);
+gap:22px;
 padding:8px 22px;
-border-radius:30px;
-z-index:20;
+border-radius:40px;
+background:
+rgba(0,0,0,.35);
+backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,.06);
+z-index:25;
+box-shadow:
+0 10px 40px rgba(0,0,0,.45);
 }
 
 .zoom{
 font-size:14px;
 font-weight:800;
-opacity:.5;
-cursor:pointer;
+color:#8c8c8c;
 transition:.2s;
-color:#fff;
+cursor:pointer;
 }
 
 .zoom.active{
-opacity:1;
-color:#FFFC00;
+color:#ffe600;
+transform:scale(1.08);
 }
 
-/* CAPTURE */
+/* CAPTURE AREA */
 
-.capture-row{
+.capture{
 position:fixed;
-bottom:74px;
+bottom:78px;
 left:0;
 width:100%;
 display:flex;
-justify-content:center;
 align-items:center;
-gap:22px;
-z-index:20;
-padding:0 16px;
+justify-content:center;
+gap:24px;
+z-index:25;
+padding:0 14px;
 }
 
 /* MEMORIES */
 
 .memories{
+width:64px;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 color:#fff;
-font-size:10px;
+font-size:11px;
 font-weight:700;
-width:64px;
-margin-right:2px;
 }
 
 .memories-icon{
@@ -266,19 +294,33 @@ margin-bottom:4px;
 position:relative;
 }
 
+.dot{
+position:absolute;
+top:-2px;
+right:-2px;
+width:10px;
+height:10px;
+border-radius:50%;
+background:#ff3040;
+border:2px solid #000;
+}
+
 /* SHUTTER */
 
 .shutter{
-width:82px;
-height:82px;
+width:86px;
+height:86px;
 border-radius:50%;
 border:5px solid #fff;
 display:flex;
 align-items:center;
 justify-content:center;
+position:relative;
 cursor:pointer;
 transition:.15s;
 flex-shrink:0;
+box-shadow:
+0 0 30px rgba(255,255,255,.08);
 }
 
 .shutter:active{
@@ -286,20 +328,23 @@ transform:scale(.9);
 }
 
 .shutter-inner{
-width:62px;
-height:62px;
+width:66px;
+height:66px;
 border-radius:50%;
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(10px);
+background:
+linear-gradient(
+145deg,
+rgba(255,255,255,.16),
+rgba(255,255,255,.04)
+);
+backdrop-filter:blur(12px);
 }
 
 /* LENSES */
 
 .lenses{
 display:flex;
-align-items:center;
 gap:12px;
-margin-left:2px;
 overflow-x:auto;
 max-width:180px;
 scrollbar-width:none;
@@ -310,14 +355,17 @@ display:none;
 }
 
 .lens{
-width:56px;
-height:56px;
+width:58px;
+height:58px;
 border-radius:50%;
 overflow:hidden;
-border:2px solid rgba(255,255,255,.28);
-cursor:pointer;
-transition:.25s;
+border:2px solid rgba(255,255,255,.25);
 flex-shrink:0;
+cursor:pointer;
+transition:
+transform .25s ease,
+border .25s ease,
+box-shadow .25s ease;
 }
 
 .lens img{
@@ -327,9 +375,10 @@ object-fit:cover;
 }
 
 .lens.active{
-transform:scale(1.08);
-border-color:#FFFC00;
-box-shadow:0 0 18px rgba(255,252,0,.35);
+transform:scale(1.12);
+border-color:#ffe600;
+box-shadow:
+0 0 22px rgba(255,230,0,.45);
 }
 
 /* FOOTER */
@@ -339,21 +388,23 @@ position:fixed;
 bottom:0;
 left:0;
 width:100%;
-height:64px;
-background:rgba(0,0,0,.96);
+height:66px;
+background:
+rgba(0,0,0,.92);
+backdrop-filter:blur(20px);
 display:flex;
 justify-content:space-around;
 align-items:center;
-padding-bottom:2px;
 z-index:30;
-border-top:1px solid rgba(255,255,255,.04);
+border-top:
+1px solid rgba(255,255,255,.05);
 }
 
 .nav{
-color:#7a7a7a;
-font-size:22px;
+font-size:23px;
+color:#6f6f6f;
 position:relative;
-transition:.15s;
+transition:.18s;
 }
 
 .nav.active{
@@ -372,26 +423,47 @@ inset:0;
 background:#fff;
 opacity:0;
 pointer-events:none;
-transition:.1s;
+transition:.08s;
 z-index:100;
 }
 
 /* FOCUS */
 
-#focusRing{
+#focus{
 position:fixed;
-width:80px;
-height:80px;
-border:2px solid #fff;
+width:82px;
+height:82px;
 border-radius:50%;
+border:2px solid #fff;
 pointer-events:none;
 opacity:0;
-transform:translate(-50%,-50%) scale(1.5);
-transition:.3s;
-z-index:50;
+transform:
+translate(-50%,-50%)
+scale(1.4);
+transition:.35s;
+z-index:60;
 }
 
-/* HIDDEN */
+/* DYNAMIC ISLAND */
+
+.island{
+position:fixed;
+top:8px;
+left:50%;
+transform:translateX(-50%);
+width:118px;
+height:30px;
+background:#000;
+border-radius:50px;
+z-index:50;
+opacity:.96;
+}
+
+/* SAFE AREA */
+
+.safe{
+height:env(safe-area-inset-bottom);
+}
 
 canvas{
 display:none;
@@ -402,56 +474,84 @@ display:none;
 
 <body>
 
+<div class="island"></div>
+
 <div id="flash"></div>
 
-<div id="focusRing"></div>
+<div id="focus"></div>
 
-<div class="vignette-top"></div>
+<div class="overlay-top"></div>
 
-<div class="vignette-bottom"></div>
+<div class="overlay-bottom"></div>
 
-<video id="cameraVideo"
+<video id="camera"
 autoplay
 playsinline></video>
 
-<canvas id="photoCanvas"></canvas>
+<canvas id="canvas"></canvas>
+
+<!-- STATUS -->
+
+<div class="status">
+
+<div>10:37</div>
+
+<div>
+<i class="fas fa-signal"></i>
+&nbsp;
+<i class="fas fa-battery-three-quarters"></i>
+</div>
+
+</div>
 
 <!-- TOP -->
 
-<div class="top-bar">
+<div class="top">
 
-<div class="left-icons">
+<div class="left">
 
-<div class="profile">
-<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=user">
+<div class="avatar">
+
+<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=premium">
+
 </div>
 
-<div class="search-btn">
+<div class="search">
+
 <i class="fas fa-search"></i>
-</div>
 
 </div>
 
-<div class="side-tools">
+</div>
 
-<i class="far fa-bell tool"></i>
+<div class="tools">
+
+<div class="tool">
+<i class="far fa-bell"></i>
+</div>
 
 <div class="tool">
 <i class="fas fa-user-plus"></i>
 <div class="badge">2</div>
 </div>
 
-<i class="fas fa-rotate tool"
-id="flipBtn"></i>
+<div class="tool"
+id="flipBtn">
+<i class="fas fa-rotate"></i>
+</div>
 
-<i class="fas fa-music tool"></i>
+<div class="tool">
+<i class="fas fa-music"></i>
+</div>
 
-<div class="tool hd-box"
+<div class="tool hd"
 id="hdBtn">
 HD
 </div>
 
-<i class="fas fa-chevron-down tool"></i>
+<div class="tool">
+<i class="fas fa-chevron-down"></i>
+</div>
 
 </div>
 
@@ -459,7 +559,7 @@ HD
 
 <!-- ZOOM -->
 
-<div class="zoom-bar">
+<div class="zoom-wrap">
 
 <div class="zoom"
 onclick="setZoom(this,.5)">
@@ -480,13 +580,16 @@ onclick="setZoom(this,2)">
 
 <!-- CAPTURE -->
 
-<div class="capture-row">
+<div class="capture">
 
 <div class="memories">
 
 <div class="memories-icon">
+
 <i class="far fa-copy"></i>
-<div class="red-dot"></div>
+
+<div class="dot"></div>
+
 </div>
 
 <div>Memories</div>
@@ -494,7 +597,7 @@ onclick="setZoom(this,2)">
 </div>
 
 <div class="shutter"
-id="shutterBtn">
+id="shutter">
 
 <div class="shutter-inner"></div>
 
@@ -510,14 +613,14 @@ onclick="setLens(this,'none')">
 </div>
 
 <div class="lens"
-onclick="setLens(this,'saturate(180%) contrast(110%)')">
+onclick="setLens(this,'contrast(120%) saturate(180%)')">
 
 <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300">
 
 </div>
 
 <div class="lens"
-onclick="setLens(this,'grayscale(100%) brightness(1.2)')">
+onclick="setLens(this,'grayscale(100%) brightness(1.15)')">
 
 <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300">
 
@@ -546,12 +649,12 @@ onclick="setLens(this,'grayscale(100%) brightness(1.2)')">
 
 <div class="nav">
 <i class="fas fa-users"></i>
-<div class="red-dot"></div>
+<div class="dot"></div>
 </div>
 
 <div class="nav">
 <i class="fas fa-play"></i>
-<div class="red-dot"></div>
+<div class="dot"></div>
 </div>
 
 </div>
@@ -559,22 +662,22 @@ onclick="setLens(this,'grayscale(100%) brightness(1.2)')">
 <script>
 
 const video =
-document.getElementById('cameraVideo');
+document.getElementById('camera');
 
 const canvas =
-document.getElementById('photoCanvas');
+document.getElementById('canvas');
 
 const flash =
 document.getElementById('flash');
 
-const focusRing =
-document.getElementById('focusRing');
-
-let usingFront = true;
+const focus =
+document.getElementById('focus');
 
 let currentZoom = 1;
 
 let currentFilter = "none";
+
+let usingFront = true;
 
 let stream;
 
@@ -613,15 +716,13 @@ updateTransform();
 
 }catch(err){
 
-console.log(err);
-
 alert("Camera permission denied");
 
 }
 
 }
 
-/* TRANSFORM */
+/* UPDATE */
 
 function updateTransform(){
 
@@ -672,7 +773,7 @@ document
 .getElementById('flipBtn')
 .onclick = async ()=>{
 
-video.style.opacity = ".2";
+video.style.opacity = ".15";
 
 usingFront = !usingFront;
 
@@ -692,18 +793,18 @@ document
 .getElementById('hdBtn')
 .onclick = function(){
 
-this.classList.toggle('active-tool');
+this.classList.toggle('active');
 
 };
 
 /* SHUTTER */
 
 document
-.getElementById('shutterBtn')
+.getElementById('shutter')
 .onclick = ()=>{
 
 const shutter =
-document.getElementById('shutterBtn');
+document.getElementById('shutter');
 
 shutter.style.transform =
 'scale(.88)';
@@ -713,7 +814,7 @@ setTimeout(()=>{
 shutter.style.transform =
 'scale(1)';
 
-},100);
+},120);
 
 flash.style.opacity = "1";
 
@@ -778,20 +879,20 @@ document.addEventListener(
 'click',
 (e)=>{
 
-focusRing.style.left =
-e.clientX + 'px';
+focus.style.left =
+e.clientX+'px';
 
-focusRing.style.top =
-e.clientY + 'px';
+focus.style.top =
+e.clientY+'px';
 
-focusRing.style.opacity = 1;
+focus.style.opacity = 1;
 
-focusRing.style.transform =
+focus.style.transform =
 'translate(-50%,-50%) scale(1)';
 
 setTimeout(()=>{
 
-focusRing.style.opacity = 0;
+focus.style.opacity = 0;
 
 },500);
 
@@ -817,13 +918,13 @@ e=>{
 let endX =
 e.changedTouches[0].clientX;
 
-if(endX - startX > 120){
+if(endX-startX > 120){
 
 console.log("Swipe Right");
 
 }
 
-if(startX - endX > 120){
+if(startX-endX > 120){
 
 console.log("Swipe Left");
 
