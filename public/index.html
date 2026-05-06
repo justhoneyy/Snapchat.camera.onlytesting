@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8" />
+
 <meta name="viewport"
 content="width=device-width,
 initial-scale=1.0,
@@ -44,9 +46,9 @@ height:100%;
 object-fit:cover;
 z-index:1;
 transition:
-transform .3s ease,
-filter .3s ease,
-opacity .3s ease;
+transform .25s ease,
+filter .25s ease,
+opacity .25s ease;
 transform:scaleX(-1);
 }
 
@@ -60,7 +62,7 @@ width:100%;
 height:180px;
 background:linear-gradient(
 to bottom,
-rgba(0,0,0,.8),
+rgba(0,0,0,.78),
 transparent
 );
 z-index:5;
@@ -82,33 +84,37 @@ z-index:5;
 pointer-events:none;
 }
 
-/* HEADER */
+/* TOP BAR */
 
 .top-bar{
 position:fixed;
-top:45px;
+top:28px;
 left:0;
 width:100%;
 display:flex;
 justify-content:space-between;
-padding:0 16px;
+padding:0 14px;
 z-index:20;
+align-items:flex-start;
 }
+
+/* LEFT */
 
 .left-icons{
 display:flex;
 align-items:center;
-gap:14px;
+gap:12px;
+margin-top:2px;
 }
 
 .profile{
-width:42px;
-height:42px;
+width:40px;
+height:40px;
 border-radius:50%;
 overflow:hidden;
 background:rgba(255,255,255,.12);
 backdrop-filter:blur(20px);
-border:1px solid rgba(255,255,255,.1);
+border:1px solid rgba(255,255,255,.08);
 }
 
 .profile img{
@@ -118,8 +124,8 @@ object-fit:cover;
 }
 
 .search-btn{
-width:42px;
-height:42px;
+width:40px;
+height:40px;
 border-radius:50%;
 background:rgba(255,255,255,.12);
 backdrop-filter:blur(20px);
@@ -133,22 +139,24 @@ box-shadow:
 inset 0 1px 1px rgba(255,255,255,.1);
 }
 
-/* RIGHT TOOLBAR */
+/* RIGHT TOOLS */
 
 .side-tools{
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:24px;
+gap:34px;
+padding-right:2px;
+margin-top:6px;
 }
 
 .tool{
-font-size:22px;
+font-size:20px;
 color:#fff;
 cursor:pointer;
 transition:.15s;
 position:relative;
-filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));
+filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));
 }
 
 .tool:active{
@@ -172,6 +180,17 @@ border-radius:20px;
 border:1px solid #000;
 }
 
+.red-dot{
+position:absolute;
+top:-2px;
+right:-2px;
+width:10px;
+height:10px;
+background:#ff3040;
+border-radius:50%;
+border:2px solid #000;
+}
+
 .hd-box{
 border:2px solid #fff;
 padding:2px 6px;
@@ -184,19 +203,18 @@ font-weight:900;
 
 .zoom-bar{
 position:fixed;
-bottom:185px;
+bottom:165px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
 align-items:center;
-gap:20px;
-background:rgba(0,0,0,.4);
+gap:24px;
+background:rgba(0,0,0,.38);
 backdrop-filter:blur(20px);
-padding:6px 18px;
+padding:8px 22px;
 border-radius:30px;
 z-index:20;
-border:1px solid rgba(255,255,255,.08);
-box-shadow:0 8px 30px rgba(0,0,0,.4);
+border:1px solid rgba(255,255,255,.06);
 }
 
 .zoom{
@@ -217,23 +235,29 @@ color:#FFFC00;
 
 .capture-row{
 position:fixed;
-bottom:90px;
+bottom:74px;
 left:0;
 width:100%;
 display:flex;
 justify-content:center;
 align-items:center;
-gap:28px;
+gap:22px;
 z-index:20;
+padding:0 16px;
 }
+
+/* MEMORIES */
 
 .memories{
 display:flex;
 flex-direction:column;
 align-items:center;
+justify-content:center;
 color:#fff;
-font-size:11px;
+font-size:10px;
 font-weight:700;
+width:64px;
+margin-right:2px;
 }
 
 .memories-icon{
@@ -242,64 +266,58 @@ margin-bottom:4px;
 position:relative;
 }
 
-.red-dot{
-position:absolute;
-top:-2px;
-right:-4px;
-width:10px;
-height:10px;
-border-radius:50%;
-background:#ff3040;
-border:2px solid #000;
-}
-
 /* SHUTTER */
 
 .shutter{
-width:88px;
-height:88px;
+width:82px;
+height:82px;
 border-radius:50%;
-border:6px solid #fff;
+border:5px solid #fff;
 display:flex;
 align-items:center;
 justify-content:center;
 cursor:pointer;
 transition:.15s;
-}
-
-.shutter-inner{
-width:66px;
-height:66px;
-border-radius:50%;
-background:rgba(255,255,255,.12);
-backdrop-filter:blur(10px);
-transition:.15s;
+flex-shrink:0;
 }
 
 .shutter:active{
 transform:scale(.9);
 }
 
-.shutter.recording{
-border-color:red;
+.shutter-inner{
+width:62px;
+height:62px;
+border-radius:50%;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(10px);
 }
 
 /* LENSES */
 
 .lenses{
 display:flex;
-gap:14px;
 align-items:center;
+gap:12px;
+margin-left:2px;
+overflow-x:auto;
+max-width:180px;
+scrollbar-width:none;
+}
+
+.lenses::-webkit-scrollbar{
+display:none;
 }
 
 .lens{
-width:58px;
-height:58px;
+width:56px;
+height:56px;
 border-radius:50%;
 overflow:hidden;
-border:2px solid rgba(255,255,255,.35);
+border:2px solid rgba(255,255,255,.28);
 cursor:pointer;
 transition:.25s;
+flex-shrink:0;
 }
 
 .lens img{
@@ -309,7 +327,7 @@ object-fit:cover;
 }
 
 .lens.active{
-transform:scale(1.1);
+transform:scale(1.08);
 border-color:#FFFC00;
 box-shadow:0 0 18px rgba(255,252,0,.35);
 }
@@ -321,18 +339,19 @@ position:fixed;
 bottom:0;
 left:0;
 width:100%;
-height:78px;
+height:64px;
 background:rgba(0,0,0,.96);
 display:flex;
 justify-content:space-around;
 align-items:center;
-padding-bottom:12px;
+padding-bottom:2px;
 z-index:30;
+border-top:1px solid rgba(255,255,255,.04);
 }
 
 .nav{
-color:#777;
-font-size:24px;
+color:#7a7a7a;
+font-size:22px;
 position:relative;
 transition:.15s;
 }
@@ -353,7 +372,7 @@ inset:0;
 background:#fff;
 opacity:0;
 pointer-events:none;
-transition:.12s;
+transition:.1s;
 z-index:100;
 }
 
@@ -372,12 +391,6 @@ transition:.3s;
 z-index:50;
 }
 
-/* SAFE AREA */
-
-.safe{
-height:env(safe-area-inset-bottom);
-}
-
 /* HIDDEN */
 
 canvas{
@@ -390,9 +403,11 @@ display:none;
 <body>
 
 <div id="flash"></div>
+
 <div id="focusRing"></div>
 
 <div class="vignette-top"></div>
+
 <div class="vignette-bottom"></div>
 
 <video id="cameraVideo"
@@ -401,14 +416,14 @@ playsinline></video>
 
 <canvas id="photoCanvas"></canvas>
 
-<!-- HEADER -->
+<!-- TOP -->
 
 <div class="top-bar">
 
 <div class="left-icons">
 
 <div class="profile">
-<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=demo">
+<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=user">
 </div>
 
 <div class="search-btn">
@@ -428,9 +443,6 @@ playsinline></video>
 
 <i class="fas fa-rotate tool"
 id="flipBtn"></i>
-
-<i class="fas fa-bolt-slash tool"
-id="flashBtn"></i>
 
 <i class="fas fa-music tool"></i>
 
@@ -471,16 +483,21 @@ onclick="setZoom(this,2)">
 <div class="capture-row">
 
 <div class="memories">
+
 <div class="memories-icon">
 <i class="far fa-copy"></i>
 <div class="red-dot"></div>
 </div>
+
 <div>Memories</div>
+
 </div>
 
 <div class="shutter"
 id="shutterBtn">
+
 <div class="shutter-inner"></div>
+
 </div>
 
 <div class="lenses">
@@ -488,7 +505,7 @@ id="shutterBtn">
 <div class="lens active"
 onclick="setLens(this,'none')">
 
-<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300">
+<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=300">
 
 </div>
 
@@ -502,7 +519,7 @@ onclick="setLens(this,'saturate(180%) contrast(110%)')">
 <div class="lens"
 onclick="setLens(this,'grayscale(100%) brightness(1.2)')">
 
-<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=300">
+<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300">
 
 </div>
 
@@ -553,9 +570,12 @@ document.getElementById('flash');
 const focusRing =
 document.getElementById('focusRing');
 
-let currentZoom = 1;
 let usingFront = true;
+
+let currentZoom = 1;
+
 let currentFilter = "none";
+
 let stream;
 
 /* CAMERA */
@@ -565,8 +585,10 @@ async function initCamera(){
 try{
 
 if(stream){
+
 stream.getTracks()
 .forEach(track=>track.stop());
+
 }
 
 stream =
@@ -593,13 +615,13 @@ updateTransform();
 
 console.log(err);
 
-alert(
-"Camera permission denied."
-);
+alert("Camera permission denied");
 
 }
 
 }
+
+/* TRANSFORM */
 
 function updateTransform(){
 
@@ -644,38 +666,6 @@ video.style.filter = filter;
 
 }
 
-/* FLASH BUTTON */
-
-document
-.getElementById('flashBtn')
-.onclick = function(){
-
-this.classList.toggle('active-tool');
-
-if(this.classList.contains('fa-bolt-slash')){
-
-this.classList.remove('fa-bolt-slash');
-this.classList.add('fa-bolt');
-
-}else{
-
-this.classList.add('fa-bolt-slash');
-this.classList.remove('fa-bolt');
-
-}
-
-};
-
-/* HD */
-
-document
-.getElementById('hdBtn')
-.onclick = function(){
-
-this.classList.toggle('active-tool');
-
-};
-
 /* FLIP */
 
 document
@@ -692,7 +682,17 @@ setTimeout(()=>{
 
 video.style.opacity = "1";
 
-},200);
+},180);
+
+};
+
+/* HD */
+
+document
+.getElementById('hdBtn')
+.onclick = function(){
+
+this.classList.toggle('active-tool');
 
 };
 
@@ -713,7 +713,7 @@ setTimeout(()=>{
 shutter.style.transform =
 'scale(1)';
 
-},120);
+},100);
 
 flash.style.opacity = "1";
 
@@ -721,7 +721,7 @@ setTimeout(()=>{
 
 flash.style.opacity = "0";
 
-},90);
+},80);
 
 capturePhoto();
 
@@ -745,6 +745,7 @@ ctx.save();
 if(usingFront){
 
 ctx.translate(canvas.width,0);
+
 ctx.scale(-1,1);
 
 }
@@ -764,36 +765,24 @@ ctx.restore();
 const image =
 canvas.toDataURL(
 'image/jpeg',
-0.9
+0.92
 );
 
-console.log(
-"Captured image length:",
-image.length
-);
-
-/* Example Download */
-
-const a =
-document.createElement('a');
-
-a.href = image;
-a.download = 'photo.jpg';
-a.click();
+console.log(image);
 
 }
 
-/* FOCUS EFFECT */
+/* FOCUS */
 
 document.addEventListener(
 'click',
 (e)=>{
 
 focusRing.style.left =
-e.clientX+'px';
+e.clientX + 'px';
 
 focusRing.style.top =
-e.clientY+'px';
+e.clientY + 'px';
 
 focusRing.style.opacity = 1;
 
